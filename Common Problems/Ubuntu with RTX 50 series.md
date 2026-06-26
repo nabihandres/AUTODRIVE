@@ -62,7 +62,7 @@ Before starting, make sure you have:
 > This guide includes manual partitioning. Selecting the wrong disk or formatting the wrong partition can erase Windows or personal data. Read each step carefully before continuing.
 
 ---
-````markdown
+
 # 1. Preparing the Installation Media
 
 This section explains how to prepare the Ubuntu Server installation USB and reserve disk space for Ubuntu from Windows before starting the installer.
