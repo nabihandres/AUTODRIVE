@@ -76,39 +76,90 @@ mkdir -p ~/autodrive_ws/src
 cd ~/autodrive_ws
 ```
 
-### 2.2 Configure the Virtual Environment and Instal Dependencies.
+Perfecto. Entonces dejamos **todas las dependencias base** en la misma sección: primero las dependencias ROS 2 del sistema con `apt`, luego las dependencias Python dentro del `venv`.
+
+Aquí tienes la sección actualizada completa:
+
+### 2.2 Configure the Virtual Environment and Install Dependencies
+
+In this step, we will install the basic dependencies required by the AutoDRIVE ROS 2 bridge and create a Python virtual environment inside the workspace.
+
+The dependency setup is divided into two parts:
+
+```text id="hk9qoa"
+System dependencies  → Installed with apt
+Python dependencies  → Installed inside the virtual environment with pip
+```
+
+This separation is important because some libraries are part of ROS 2 and should be installed through the Ubuntu package manager, while others are specific Python packages required by the AutoDRIVE DevKit.
+
+#### 2.2.1 Install ROS 2 System Dependencies
+
+Some Python modules used by the AutoDRIVE ROS 2 bridge are provided by ROS 2 packages instead of `pip`.
+
+Install the ROS 2 transformation library:
+
+```bash id="dy8eyh"
+sudo apt update
+sudo apt install -y ros-humble-tf-transformations
+```
+
+The package `ros-humble-tf-transformations` provides the `tf_transformations` Python module, which is used by the bridge to convert orientations between Euler angles and quaternions.
+
+This is required because the AutoDRIVE bridge imports functions such as:
+
+```python id="pu5p52"
+from tf_transformations import quaternion_from_euler
+```
+
+Without this package, the bridge may fail with an error similar to:
+
+```text id="o5kuy3"
+ModuleNotFoundError: No module named 'tf_transformations'
+```
+
+#### 2.2.2 Create and Activate the Virtual Environment
 
 Create the virtual environment inside the workspace root:
 
-```bash
+```bash id="a3k9oe"
 python3 -m venv venv
 ```
 
 Activate the environment:
 
-```bash
+```bash id="yzmcdv"
 source venv/bin/activate
 ```
----
+
+When the environment is active, the terminal prompt should show `(venv)` at the beginning.
 
 > [!NOTE]
 > The virtual environment must be activated every time a new terminal is opened before running the DevKit or installing Python dependencies.
 
+
+#### 2.2.3 Install Python Dependencies
+
 With the virtual environment active, first update the basic Python installation tools:
 
-```bash
+```bash id="mnsjjq"
 python -m pip install --upgrade pip setuptools wheel
 ```
 
-Then install the required libraries using the verified versions for compatibility:
+Then install the required libraries using fixed versions for compatibility:
 
-```bash
+```bash id="9ln6qj"
 python -m pip install \
   PyYAML \
   eventlet==0.33.3 \
+  Flask==1.1.4 \
   Flask-SocketIO==4.1.0 \
   python-socketio==4.2.0 \
   python-engineio==3.13.0 \
+  Werkzeug==1.0.1 \
+  Jinja2==2.11.3 \
+  itsdangerous==1.1.0 \
+  MarkupSafe==2.0.1 \
   gevent-websocket==0.10.1 \
   transforms3d \
   attrdict \
@@ -117,17 +168,26 @@ python -m pip install \
 ```
 
 > [!NOTE]
-> `PyYAML` is included because ROS 2 commonly uses YAML files for node parameters, launch configurations, robot settings, and calibration files. Installing it inside the virtual environment avoids dependency warnings related to ROS 2 packages such as `launch-ros`.
+> `PyYAML` is included because ROS 2 commonly uses YAML files for node parameters, launch configurations, robot settings, and calibration files.
 
 > [!IMPORTANT]
-> Do not leave empty lines after the backslash (`\`) when writing multiline commands in Bash.
-> The backslash only continues the command on the next immediate line. If an empty line is inserted, the command will be interrupted and the remaining packages may be interpreted as separate terminal commands.
+> The versions of `Flask`, `Flask-SocketIO`, `python-socketio`, `python-engineio`, `Werkzeug`, `Jinja2`, `itsdangerous`, and `MarkupSafe` are fixed to avoid compatibility issues with the AutoDRIVE communication bridge.
+>
+> Do not leave empty lines after the backslash (`\`) when writing multiline commands in Bash. The backslash only continues the command on the next immediate line. If an empty line is inserted, the command will be interrupted and the remaining packages may be interpreted as separate terminal commands.
 
-The `attrdict` library has compatibility issues with Python 3.10+, because it imports `Mapping`, `MutableMapping`, and `Sequence` from the old `collections` module. In Python 3.10, these classes must be imported from `collections.abc`.
+#### 2.2.4 Critical Compatibility Patch for `attrdict`
+
+The `attrdict` library has compatibility issues with Python 3.10+, because it imports `Mapping`, `MutableMapping`, and `Sequence` from the old `collections` module.
+
+In Python 3.10, these classes must be imported from:
+
+```text id="fjlb6g"
+collections.abc
+```
 
 To fix this issue without modifying the global system, apply the patch directly inside the virtual environment:
 
-```bash
+```bash id="t5l1m3"
 ATTRDICT_DIR="$(python -c 'import site, os; print(os.path.join(site.getsitepackages()[0], "attrdict"))')"
 
 find "$ATTRDICT_DIR" -name "*.py" -exec sed -i \
@@ -138,19 +198,50 @@ find "$ATTRDICT_DIR" -name "*.py" -exec sed -i \
   {} +
 ```
 
-This method automatically detects the correct `attrdict` installation path inside the active virtual environment, instead of assuming a fixed Python version path such as `python3.10`.
+This method automatically detects the correct `attrdict` installation path inside the active virtual environment, instead of assuming a fixed Python version path such as:
 
-#### Verify the Installation
-
-After installing the dependencies and applying the patch, verify that the main libraries were installed correctly:
-
-```bash
-python -m pip show attrdict python-engineio transforms3d numpy
+```text id="f3okh0"
+python3.10
 ```
 
-Then test the imports:
+#### 2.2.5 Verify the Installation
 
-```bash
+After installing the dependencies and applying the patch, verify that the main Python libraries were installed correctly:
+
+```bash id="6uvmaa"
+python -m pip show \
+  PyYAML \
+  attrdict \
+  transforms3d \
+  numpy \
+  opencv-contrib-python \
+  Flask \
+  Flask-SocketIO \
+  python-socketio \
+  python-engineio
+```
+
+You can also check the exact installed versions with:
+
+```bash id="ufkym8"
+python -m pip freeze | grep -E "Flask|Werkzeug|Jinja2|MarkupSafe|itsdangerous|socketio|engineio|eventlet|gevent|PyYAML|attrdict|transforms3d|numpy|opencv"
+```
+The communication-related dependencies should include versions similar to:
+
+```text id="btqwgd"
+Flask==1.1.4
+Flask-SocketIO==4.1.0
+python-socketio==4.2.0
+python-engineio==3.13.0
+Werkzeug==1.0.1
+Jinja2==2.11.3
+itsdangerous==1.1.0
+MarkupSafe==2.0.1
+```
+
+Then test the Python virtual environment imports:
+
+```bash id="k742lx"
 python - <<'PY'
 from attrdict import AttrDict
 import transforms3d
@@ -158,14 +249,29 @@ import numpy
 import cv2
 import socketio
 import engineio
+import flask
+import yaml
 
-print("All dependencies were imported successfully.")
+print("All virtual environment dependencies were imported successfully.")
 PY
 ```
 
-If the message appears without errors, the virtual environment is correctly configured.
+Finally, verify that the ROS 2 transformation module is available:
+
+```bash id="d45k94"
+source /opt/ros/humble/setup.bash
+
+python - <<'PY'
+from tf_transformations import quaternion_from_euler
+
+print("ROS 2 tf_transformations imported successfully.")
+PY
+```
+
+If both messages appear without errors, the system and virtual environment dependencies are correctly configured.
 
 [Screencast from 06-26-2026 03:53:47 AM.webm](https://github.com/user-attachments/assets/df783665-119e-4cd0-a021-468c0ad4dc22)
+
 
 ### 2.4 Cloning and Organizing the Workspace
 
@@ -297,7 +403,7 @@ source install/setup.bash
 This command makes the newly compiled `autodrive_ros2` package available in the current terminal session.
 
 > [!NOTE]
-> This command must be executed in every new terminal before running the AutoDRIVE ROS 2 package, unless it is added permanently to the `.bashrc` file.
+> This command must be executed in every new terminal before running the AutoDRIVE ROS 2 package.
 
 You can check if ROS 2 detects the package with:
 
@@ -307,15 +413,11 @@ ros2 pkg list | grep autodrive
 
 If the package was correctly built and sourced, an AutoDRIVE-related package name should appear in the terminal.
 
-Un detalle importante: `colcon` es el build tool estándar usado para compilar workspaces de ROS 2, y `--symlink-install` usa enlaces simbólicos en lugar de copiar archivos cuando es posible, lo cual es útil durante desarrollo.
-
 VIDEO DE ESTE PROCESO
 
 ---
 
 ## 🚀 3. Execution and Teleoperation
-
-
 
 To start the system, follow this order strictly. We recommend opening independent terminals for each process.
 
