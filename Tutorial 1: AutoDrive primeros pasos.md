@@ -61,6 +61,7 @@ Follow these steps to prepare the simulation environment:
 
    ./"AutoDRIVE Simulator.x86_64"
 
+---
 
 ## 2. ROS 2 BRIDGE (DEVKIT)
 
@@ -94,8 +95,6 @@ source venv/bin/activate
 > [!NOTE]
 > The virtual environment must be activated every time a new terminal is opened before running the DevKit or installing Python dependencies.
 
-When the environment is active, the terminal prompt should show `(venv)` at the beginning.
-
 With the virtual environment active, first update the basic Python installation tools:
 
 ```bash
@@ -106,6 +105,7 @@ Then install the required libraries using the verified versions for compatibilit
 
 ```bash
 python -m pip install \
+  PyYAML \
   eventlet==0.33.3 \
   Flask-SocketIO==4.1.0 \
   python-socketio==4.2.0 \
@@ -116,6 +116,9 @@ python -m pip install \
   numpy==1.23.5 \
   opencv-contrib-python
 ```
+
+> [!NOTE]
+> `PyYAML` is included because ROS 2 commonly uses YAML files for node parameters, launch configurations, robot settings, and calibration files. Installing it inside the virtual environment avoids dependency warnings related to ROS 2 packages such as `launch-ros`.
 
 > [!IMPORTANT]
 > Do not leave empty lines after the backslash (`\`) when writing multiline commands in Bash.
