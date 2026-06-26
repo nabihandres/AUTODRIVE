@@ -165,10 +165,14 @@ Install the ROS 2 transformation library:
 
 ```bash id="dy8eyh"
 sudo apt update
-sudo apt install -y ros-humble-tf-transformations
+sudo apt install -y \
+  ros-humble-tf-transformations \
+  ros-humble-imu-tools
 ```
 
 The package `ros-humble-tf-transformations` provides the `tf_transformations` Python module, which is used by the bridge to convert orientations between Euler angles and quaternions.
+
+The package `ros-humble-imu-tools` provides additional IMU-related tools and RViz plugins used to visualize IMU data. This helps avoid RViz errors related to the `rviz_imu_plugin/Imu` display.
 
 This is required because the AutoDRIVE bridge imports functions such as:
 
@@ -208,7 +212,9 @@ With the virtual environment active, first update the basic Python installation 
 
 ```bash id="mnsjjq"
 python -m pip install --upgrade pip setuptools wheel
+python -m pip install colcon-common-extensions
 ```
+Installing `colcon` inside the virtual environment helps ensure that the workspace is built using the same Python environment where the AutoDRIVE dependencies were installed.
 
 Then install the required libraries using fixed versions for compatibility:
 
@@ -224,15 +230,23 @@ python -m pip install \
   Jinja2==2.11.3 \
   itsdangerous==1.1.0 \
   MarkupSafe==2.0.1 \
+  gevent \
   gevent-websocket==0.10.1 \
   transforms3d \
   attrdict \
+  Pillow \
   numpy==1.23.5 \
   opencv-contrib-python
 ```
 
 > [!NOTE]
 > `PyYAML` is included because ROS 2 commonly uses YAML files for node parameters, launch configurations, robot settings, and calibration files.
+> 
+> `Pillow` provides the `PIL` module, which is used by the AutoDRIVE bridge for image handling. Without it, the bridge may fail with:
+>
+> ```text
+> ModuleNotFoundError: No module named 'PIL'
+> ```
 
 > [!IMPORTANT]
 > The versions of `Flask`, `Flask-SocketIO`, `python-socketio`, `python-engineio`, `Werkzeug`, `Jinja2`, `itsdangerous`, and `MarkupSafe` are fixed to avoid compatibility issues with the AutoDRIVE communication bridge.
@@ -277,6 +291,9 @@ python -m pip show \
   PyYAML \
   attrdict \
   transforms3d \
+  Pillow \
+  gevent \
+  gevent-websocket \
   numpy \
   opencv-contrib-python \
   Flask \
@@ -288,7 +305,7 @@ python -m pip show \
 You can also check the exact installed versions with:
 
 ```bash id="ufkym8"
-python -m pip freeze | grep -E "Flask|Werkzeug|Jinja2|MarkupSafe|itsdangerous|socketio|engineio|eventlet|gevent|PyYAML|attrdict|transforms3d|numpy|opencv"
+python -m pip freeze | grep -E "Flask|Werkzeug|Jinja2|MarkupSafe|itsdangerous|socketio|engineio|eventlet|gevent|PyYAML|attrdict|transforms3d|Pillow|numpy|opencv"
 ```
 The communication-related dependencies should include versions similar to:
 
@@ -308,6 +325,9 @@ Then test the Python virtual environment imports:
 ```bash id="k742lx"
 python - <<'PY'
 from attrdict import AttrDict
+from PIL import Image
+from gevent import pywsgi
+import geventwebsocket
 import transforms3d
 import numpy
 import cv2
@@ -405,7 +425,7 @@ After extracting the required ROS 2 package, the rest of the cloned repository i
 Remove the original `AutoDRIVE` folder:
 
 ```bash
-rm -rf ~/autodrive_ws/src/AutoDRIVE
+rm -rf build install log
 ```
 
 This cleanup prevents `colcon` from scanning unnecessary files or unrelated packages during compilation.
@@ -436,16 +456,16 @@ Return to the workspace root:
 cd ~/autodrive_ws
 ```
 
-Activate the Python virtual environment:
-
-```bash
-source venv/bin/activate
-```
-
 Load the ROS 2 Humble environment:
 
 ```bash
 source /opt/ros/humble/setup.bash
+```
+
+Activate the Python virtual environment:
+
+```bash
+source venv/bin/activate
 ```
 
 The virtual environment provides the Python libraries required by the AutoDRIVE DevKit, while the ROS 2 setup file provides access to ROS 2 commands, packages, environment variables, and build tools.
@@ -453,10 +473,12 @@ The virtual environment provides the Python libraries required by the AutoDRIVE 
 Build the workspace using:
 
 ```bash
-colcon build --symlink-install
+python -m colcon build --symlink-install
 ```
 
 The `--symlink-install` option creates symbolic links instead of copying some files into the `install` folder. This is useful during development because changes in Python scripts and resource files can be reflected more easily without requiring a full rebuild every time.
+
+Using `python -m colcon` helps ensure that the build process uses the Python environment where the AutoDRIVE dependencies were installed.
 
 After compilation, source the local workspace setup file:
 
@@ -511,8 +533,8 @@ Before running the bridge, open a terminal and load the required environments:
 ```bash
 cd ~/autodrive_ws
 
-source venv/bin/activate
 source /opt/ros/humble/setup.bash
+source venv/bin/activate
 source install/setup.bash
 
 export PYTHONUNBUFFERED=1
@@ -522,9 +544,9 @@ The command `source venv/bin/activate` activates the Python virtual environment 
 
 The command `source /opt/ros/humble/setup.bash` loads the ROS 2 Humble environment.
 
-The command `source install/setup.bash` loads the compiled packages from the current workspace.
+The command `source venv/bin/activate` activates the Python virtual environment where the required AutoDRIVE Python dependencies were installed.
 
-The variable `PYTHONUNBUFFERED=1` forces Python to print logs immediately in the terminal, which is useful for debugging bridge connection issues.
+The command `source install/setup.bash` loads the compiled packages from the current workspace.
 
 ### Option A: Bridge with RViz Visualization
 
@@ -591,8 +613,8 @@ Load the same workspace environment:
 ```bash
 cd ~/autodrive_ws
 
-source venv/bin/activate
 source /opt/ros/humble/setup.bash
+source venv/bin/activate
 source install/setup.bash
 ```
 
