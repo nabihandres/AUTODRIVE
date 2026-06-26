@@ -125,6 +125,8 @@ If the simulator starts correctly, the AutoDRIVE graphical interface should open
 > [!IMPORTANT]
 > At this stage, the simulator may show its communication status as `Disconnected`. This is expected because the ROS 2 bridge has not been started yet. The connection will be established later in the execution section.
 
+https://github.com/user-attachments/assets/255f35c9-1cc0-4e90-990a-4d0f33764d0f
+
 ---
 
 ## 2. ROS 2 BRIDGE
@@ -354,7 +356,8 @@ PY
 
 If both messages appear without errors, the system and virtual environment dependencies are correctly configured.
 
-[Screencast from 06-26-2026 03:53:47 AM.webm](https://github.com/user-attachments/assets/df783665-119e-4cd0-a021-468c0ad4dc22)
+
+https://github.com/user-attachments/assets/4a939ea6-87d3-4630-8bc7-48050aa04e3d
 
 
 ### 2.3 Cloning and Organizing the Workspace
@@ -426,6 +429,11 @@ Remove the original `AutoDRIVE` folder:
 
 ```bash
 rm -rf Autodrive
+```
+
+Remove the previous log file to ensure a clean build:
+
+```bash
 rm -rf build install log
 ```
 
@@ -500,7 +508,7 @@ ros2 pkg list | grep autodrive
 
 If the package was correctly built and sourced, an AutoDRIVE-related package name should appear in the terminal.
 
-VIDEO DE ESTE PROCESO
+https://github.com/user-attachments/assets/57a2bed2-dc34-469a-8b7b-8336618073cb
 
 ---
 
@@ -637,6 +645,8 @@ X → Brake
 
 > [!IMPORTANT]
 > The teleoperation terminal must remain selected and focused. If another window is active, the keyboard inputs will not be captured by the teleoperation node.
+
+https://github.com/user-attachments/assets/e91b4b6d-f625-48be-8c49-94108f4ffb49
 
 ### 3.4 Recommended Execution Order
 
