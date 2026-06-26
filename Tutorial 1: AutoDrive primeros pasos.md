@@ -62,85 +62,110 @@ Follow these steps to prepare the simulation environment:
    ./"AutoDRIVE Simulator.x86_64"
 
 
-## 🛠️ 2. ROS 2 BRIDGE (DEVKIT)
-
-
-
-
+## 2. ROS 2 BRIDGE (DEVKIT)
 
 ### 2.1 Workspace and Virtual Environment Setup
 
+To avoid conflicts between the library versions required by the DevKit and the default Python packages installed in Ubuntu 22.04, we will use a Python Virtual Environment (`venv`). This isolates the required dependencies inside the workspace and prevents changes to the global system installation.
 
-To avoid conflicts between the library versions required by the Devkit and the system defaults (Ubuntu 22.04), we will use a Virtual Environment (venv). This isolates the Python dependencies within a controlled environment.
+Run the following commands to create the workspace folder structure:
 
-
-
-### 2.2 Create Workspace
-
-Run the following commands to create the folder structure:
-
-
-   ```bash
-
+```bash
 mkdir -p ~/autodrive_ws/src
-
 cd ~/autodrive_ws
-
 ```
 
-### 2.3 Configure the Virtual Environment (venv)
 
-2.3.1 Create and activate the environment inside your workspace root:
+### 2.2 Configure the Virtual Environment and Instal Dependencies.
 
-   ```bash
+Create the virtual environment inside the workspace root:
 
-# Create the environment
-
+```bash
 python3 -m venv venv
+```
 
+Activate the environment:
 
-
-# Activate the environment (You must do this in every new terminal)
+```bash
 source venv/bin/activate
-
 ```
+---
 
-2.3.2 Install Dependencies
+> [!NOTE]
+> The virtual environment must be activated every time a new terminal is opened before running the DevKit or installing Python dependencies.
 
-With the environment active (venv), install the necessary libraries using these verified versions for stability:
+When the environment is active, the terminal prompt should show `(venv)` at the beginning.
+
+With the virtual environment active, first update the basic Python installation tools:
+
 ```bash
-
-pip install eventlet==0.33.3 Flask-SocketIO==4.1.0 python-socketio==4.2.0 \
-
-            python-engineio==3.13.0 gevent-websocket==0.10.1 \
-
-            transforms3d attrdict numpy==1.23.5 opencv-contrib-python
-
+python -m pip install --upgrade pip setuptools wheel
 ```
 
-2.3.3 Critical Compatibility Patch
+Then install the required libraries using the verified versions for compatibility:
 
-
-The attrdict library has incompatibilities with collection modules in Python 3.10+. To fix the import error without affecting the global system, apply this patch directly to the files inside your venv:
 ```bash
-
-# Fix Mapping import error in attrdict
-find ~/autodrive_ws/venv/lib/python3.10/site-packages/attrdict/ -name "*.py" -exec sed -i 's/from collections import Mapping/from collections.abc import Mapping/g' {} +
-
-
-
-# Fix multiple import variants
-find ~/autodrive_ws/venv/lib/python3.10/site-packages/attrdict/ -name "*.py" -exec sed -i 's/from collections import Mapping, MutableMapping, Sequence/from collections.abc import Mapping, MutableMapping, Sequence/g' {} +
-
-
-
+python -m pip install \
+  eventlet==0.33.3 \
+  Flask-SocketIO==4.1.0 \
+  python-socketio==4.2.0 \
+  python-engineio==3.13.0 \
+  gevent-websocket==0.10.1 \
+  transforms3d \
+  attrdict \
+  numpy==1.23.5 \
+  opencv-contrib-python
 ```
 
+> [!IMPORTANT]
+> Do not leave empty lines after the backslash (`\`) when writing multiline commands in Bash.
+> The backslash only continues the command on the next immediate line. If an empty line is inserted, the command will be interrupted and the remaining packages may be interpreted as separate terminal commands.
 
+The `attrdict` library has compatibility issues with Python 3.10+, because it imports `Mapping`, `MutableMapping`, and `Sequence` from the old `collections` module. In Python 3.10, these classes must be imported from `collections.abc`.
 
+To fix this issue without modifying the global system, apply the patch directly inside the virtual environment:
 
+```bash
+ATTRDICT_DIR="$(python -c 'import site, os; print(os.path.join(site.getsitepackages()[0], "attrdict"))')"
 
+find "$ATTRDICT_DIR" -name "*.py" -exec sed -i \
+  -e 's/from collections import Mapping, MutableMapping, Sequence/from collections.abc import Mapping, MutableMapping, Sequence/g' \
+  -e 's/from collections import Mapping/from collections.abc import Mapping/g' \
+  -e 's/from collections import MutableMapping/from collections.abc import MutableMapping/g' \
+  -e 's/from collections import Sequence/from collections.abc import Sequence/g' \
+  {} +
+```
 
+This method automatically detects the correct `attrdict` installation path inside the active virtual environment, instead of assuming a fixed Python version path such as `python3.10`.
+
+#### Verify the Installation
+
+After installing the dependencies and applying the patch, verify that the main libraries were installed correctly:
+
+```bash
+python -m pip show attrdict python-engineio transforms3d numpy
+```
+
+Then test the imports:
+
+```bash
+python - <<'PY'
+from attrdict import AttrDict
+import transforms3d
+import numpy
+import cv2
+import socketio
+import engineio
+
+print("All dependencies were imported successfully.")
+PY
+```
+
+If the message appears without errors, the virtual environment is correctly configured.
+
+También corregí el detalle de usar `pip` directamente por `python -m pip`, porque así te aseguras de instalar los paquetes dentro del Python activo del `venv`, no en otra instalación del sistema.
+
+---
 
 ### 2.4 Cloning and Organizing the Workspace
 
