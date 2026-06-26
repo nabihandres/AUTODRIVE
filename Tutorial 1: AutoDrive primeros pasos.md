@@ -21,7 +21,7 @@ Before starting, ensure your environment meets the following requirements:
   - [1.3 Open the Simulator Folder](#13-open-the-simulator-folder)
   - [1.4 Grant Execution Permissions](#14-grant-execution-permissions)
   - [1.5 Start AutoDRIVE Simulator](#15-start-autodrive-simulator)
-- [2. ROS 2 Bridge DevKit](#2-ros-2-bridge-devkit)
+- [2. ROS 2 Bridge](#2-ros-2-bridge)
   - [2.1 Workspace and Virtual Environment Setup](#21-workspace-and-virtual-environment-setup)
   - [2.2 Configure the Virtual Environment and Install Dependencies](#22-configure-the-virtual-environment-and-install-dependencies)
     - [2.2.1 Install ROS 2 System Dependencies](#221-install-ros-2-system-dependencies)
@@ -127,7 +127,7 @@ If the simulator starts correctly, the AutoDRIVE graphical interface should open
 
 ---
 
-## 2. ROS 2 BRIDGE (DEVKIT)
+## 2. ROS 2 BRIDGE
 
 ### 2.1 Workspace and Virtual Environment Setup
 
