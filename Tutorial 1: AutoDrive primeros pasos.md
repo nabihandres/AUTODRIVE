@@ -417,102 +417,156 @@ VIDEO DE ESTE PROCESO
 
 ---
 
-## 🚀 3. Execution and Teleoperation
+## 3. Execution and Teleoperation
 
-To start the system, follow this order strictly. We recommend opening independent terminals for each process.
+In this section, we will run the complete AutoDRIVE system. The execution requires three independent processes:
 
+```text
+Terminal 1 → ROS 2 communication bridge
+Terminal 2 → AutoDRIVE Simulator
+Terminal 3 → Keyboard teleoperation node
+```
 
-### Step 1: Start the Communication Bridge
-You have two modes depending on whether you need sensor visualization or want to save system resources:
+Each process must remain running in its own terminal. Closing one of them may interrupt the connection between the simulator, the ROS 2 bridge, and the teleoperation node.
 
+### 3.1 Start the Communication Bridge
 
-**Option A: Bridge with Visualization (RViz)**
-Use this to see the LiDAR, camera feed, and the vehicle's 3D model while driving.
+The communication bridge connects AutoDRIVE Simulator with ROS 2.
+
+Its role is to exchange data between both sides:
+
+```text
+Simulator → ROS 2 topics
+ROS 2 commands → Simulator
+```
+
+For example, sensor data such as LiDAR, camera, vehicle state, and other simulation information are published as ROS 2 topics. At the same time, control commands generated in ROS 2 are sent back to the simulator.
+
+Before running the bridge, open a terminal and load the required environments:
+
 ```bash
-
 cd ~/autodrive_ws
 
 source venv/bin/activate
-
 source /opt/ros/humble/setup.bash
-
 source install/setup.bash
 
 export PYTHONUNBUFFERED=1
+```
 
-# Launches the bridge and opens RViz automatically
+The command `source venv/bin/activate` activates the Python virtual environment where the required AutoDRIVE Python dependencies were installed.
+
+The command `source /opt/ros/humble/setup.bash` loads the ROS 2 Humble environment.
+
+The command `source install/setup.bash` loads the compiled packages from the current workspace.
+
+The variable `PYTHONUNBUFFERED=1` forces Python to print logs immediately in the terminal, which is useful for debugging bridge connection issues.
+
+### Option A: Bridge with RViz Visualization
+
+Use this option if you want to visualize the vehicle, LiDAR, camera data, and other ROS 2 information in RViz while the simulator is running.
+
+```bash
 ros2 launch autodrive_f1tenth simulator_bringup_rviz.launch.py
-
 ```
 
-**Option B: Simple Bridge (Headless)**
-Use this if you only want to teleoperate the car without the graphical overhead of RViz.
+This launch file starts the AutoDRIVE ROS 2 bridge and opens RViz automatically.
+
+This option is useful for debugging and visualization, but it uses more system resources.
+
+### Option B: Headless Bridge
+
+Use this option if you only want to run the communication bridge without opening RViz.
+
 ```bash
-
-
-
-cd ~/autodrive_ws
-
-source venv/bin/activate
-
-source /opt/ros/humble/setup.bash
-
-source install/setup.bash
-
-export PYTHONUNBUFFERED=1
-
-# Launches only the communication bridge
 ros2 launch autodrive_f1tenth simulator_bringup_headless.launch.py
-
 ```
 
+This launch file starts only the communication bridge.
 
+This option is recommended when you want to save system resources or when you only need to teleoperate the vehicle.
 
-### Step 2: Run the Simulator
+> [!TIP]
+> If this is your first test, it is recommended to start with the headless bridge. Once the simulator connects correctly, you can try the RViz version.
 
+### 3.2 Run AutoDRIVE Simulator
 
+Open a new terminal and launch the simulator.
 
-Open a new terminal and launch the simulator:
+Go to the folder where AutoDRIVE Simulator was extracted:
+
 ```bash
+cd ~/Downloads/AutoDRIVE_Sim
+```
 
-cd ~/Downloads/AutoDRIVE_Sim  # Adjust path to your folder
+Run the simulator:
 
+```bash
 ./"AutoDRIVE Simulator.x86_64"
+```
 
-  ```
+> [!NOTE]
+> If your simulator is stored in a different folder, replace the path with the correct location.
 
-Actions in the simulator:
+Once the simulator opens:
 
+1. Click the antenna button labeled `Disconnected`.
+2. Wait until it changes to `Connected`.
+3. Verify that the driving mode is set to `Autonomous`.
 
-* Click the antenna button (Disconnected) until it changes to Connected.
+The `Connected` status means that the simulator successfully established communication with the ROS 2 bridge.
 
-* Verify that the driving mode is set to Autonomous.
+If the button does not change to `Connected`, return to the bridge terminal and check for Python errors, missing dependencies, or failed ROS 2 nodes.
 
+### 3.3 Keyboard Control: Teleoperation
 
+Open a third terminal to run the keyboard teleoperation node.
 
-### Step 3: Keyboard Control (Teleoperation)
+Load the same workspace environment:
 
-
-
-In a new terminal, run the node to control the car using keys:
 ```bash
-
 cd ~/autodrive_ws
 
 source venv/bin/activate
-
 source /opt/ros/humble/setup.bash
-
 source install/setup.bash
-
-ros2 run autodrive_f1tenth teleop_keyboard
-
 ```
 
-Controls: W (Accelerate), S (Reverse), A (Left), D (Right), X (Brake).
+Run the keyboard teleoperation node:
 
+```bash
+ros2 run autodrive_f1tenth teleop_keyboard
+```
 
-Note: You must keep this terminal window selected/focused for the vehicle to respond to keystrokes.
+Use the following keys to control the vehicle:
+
+```text
+W → Accelerate
+S → Reverse
+A → Turn left
+D → Turn right
+X → Brake
+```
+
+> [!IMPORTANT]
+> The teleoperation terminal must remain selected and focused. If another window is active, the keyboard inputs will not be captured by the teleoperation node.
+
+### 3.4 Recommended Execution Order
+
+The recommended order is:
+
+```text
+1. Start the ROS 2 bridge.
+2. Start AutoDRIVE Simulator.
+3. Connect the simulator using the antenna button.
+4. Verify that the simulator status changes to Connected.
+5. Run the keyboard teleoperation node.
+6. Keep the teleoperation terminal focused while driving.
+```
+
+Following this order ensures that the simulator can find the bridge when the connection button is pressed.
+
+---
 
 # 🤝 Contributing
 Contributions are welcome! If you have a suggestion that would make this better, please fork the repo and create a pull request.
