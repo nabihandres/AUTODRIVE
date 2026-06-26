@@ -340,7 +340,7 @@ After completing these steps, the installer will proceed to the **Storage Config
 
 The next section explains how to perform manual partitioning and install Ubuntu without deleting Windows.
 
-```
+---
 
 # 2. Installing Ubuntu Server
 
