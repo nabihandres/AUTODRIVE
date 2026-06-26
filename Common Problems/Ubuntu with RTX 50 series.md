@@ -422,7 +422,7 @@ Reload the partition table:
 sudo partprobe /dev/sdb
 ```
 
-Reload the partition table:
+Check all the storage devices in the system:
 
 ```bash
 lsblk
