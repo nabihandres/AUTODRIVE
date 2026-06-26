@@ -166,7 +166,7 @@ PY
 
 If the message appears without errors, the virtual environment is correctly configured.
 
-
+[Screencast from 06-26-2026 03:53:47 AM.webm](https://github.com/user-attachments/assets/df783665-119e-4cd0-a021-468c0ad4dc22)
 
 ---
 
