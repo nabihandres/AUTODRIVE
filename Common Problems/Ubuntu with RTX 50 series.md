@@ -22,28 +22,36 @@ Instead of using the Ubuntu Desktop installer, this guide uses Ubuntu Server 22.
 Ubuntu Server uses a text-based installer, which avoids the graphical environment that causes the black screen. After the base system is installed, the NVIDIA driver can be installed from the terminal. Once the GPU is working correctly, the Ubuntu Desktop environment can be installed normally.
 
 The final result is still a fully usable Ubuntu 22.04 desktop system, but installed through a safer path for RTX 50 Series GPUs.
-# Table of Contents 
-- [1. Preparing the Installation Media](#1-preparing-the-installation-media) 
-  - [1.1 Download Ubuntu Server](#11-download-ubuntu-server) 
-  - [1.2 Download Rufus](#12-download-rufus) 
-  - [1.3 Create the Bootable USB Drive](#13-create-the-bootable-usb-drive) 
-  - [1.4 Shrink the Windows Partition](#14-shrink-the-windows-partition) 
-  - [1.5 Boot from the USB Drive](#15-boot-from-the-usb-drive) 
-  - [1.6 Initial Ubuntu Server Configuration](#16-initial-ubuntu-server-configuration) 
-- [2. Installing Ubuntu Server](#2-installing-ubuntu-server) 
-  - [2.1 Manual Storage Configuration](#21-manual-storage-configuration) 
-  - [2.2 Configure Ubuntu Partitions](#22-configure-ubuntu-partitions) 
-  - [2.3 Create the User Account](#23-create-the-user-account) 
-  - [2.4 Install OpenSSH](#24-install-openssh) 
-  - [2.5 Complete the Installation](#25-complete-the-installation) 
-- [3. Configuring Ubuntu Server](#3-configuring-ubuntu-server) 
-  - [3.1 First Login](#31-first-login) 
-  - [3.2 Update Ubuntu Server](#32-update-ubuntu-server) 
-- [4. Installing NVIDIA Drivers](#4-installing-nvidia-drivers) 
-  - [4.1 Install the NVIDIA Driver](#41-install-the-nvidia-driver) 
-  - [4.2 Verify the Installation](#42-verify-the-installation) 
-- [5. Installing Ubuntu Desktop](#5-installing-ubuntu-desktop) 
-  - [5.1 Install the Desktop Environment](#51-install-the-desktop-environment) 
+
+# Table of Contents
+
+- [1. Preparing the Installation Media](#1-preparing-the-installation-media)
+  - [1.1 Download Ubuntu Server](#11-download-ubuntu-server)
+  - [1.2 Download Rufus](#12-download-rufus)
+  - [1.3 Create the Bootable USB Drive](#13-create-the-bootable-usb-drive)
+  - [1.4 Shrink the Windows Partition](#14-shrink-the-windows-partition)
+  - [1.5 BIOS/UEFI Settings](#15-biosuefi-settings)
+  - [1.6 Boot from the USB Drive](#16-boot-from-the-usb-drive)
+  - [1.7 Launch the Ubuntu Server Installer](#17-launch-the-ubuntu-server-installer)
+  - [1.8 Initial Ubuntu Server Configuration](#18-initial-ubuntu-server-configuration)
+
+- [2. Installing Ubuntu Server](#2-installing-ubuntu-server)
+  - [2.1 Manual Storage Configuration](#21-manual-storage-configuration)
+  - [2.2 Configure Ubuntu Partitions](#22-configure-ubuntu-partitions)
+  - [2.3 Create the User Account](#23-create-the-user-account)
+  - [2.4 Install OpenSSH](#24-install-openssh)
+  - [2.5 Complete the Installation](#25-complete-the-installation)
+
+- [3. Configuring Ubuntu Server](#3-configuring-ubuntu-server)
+  - [3.1 First Login](#31-first-login)
+  - [3.2 Update Ubuntu Server](#32-update-ubuntu-server)
+
+- [4. Installing NVIDIA Drivers](#4-installing-nvidia-drivers)
+  - [4.1 Install the NVIDIA Driver](#41-install-the-nvidia-driver)
+  - [4.2 Verify the Installation](#42-verify-the-installation)
+
+- [5. Installing Ubuntu Desktop](#5-installing-ubuntu-desktop)
+  - [5.1 Install the Desktop Environment](#51-install-the-desktop-environment)
   - [5.2 Final Reboot](#52-final-reboot)
 
 ---
