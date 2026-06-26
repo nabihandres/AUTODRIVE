@@ -1,65 +1,132 @@
 # AutoDRIVE - Installer & ROS 2 Bridge (AIROS) 🏎️
 
-
-
 This repository provides a detailed guide to installing the AutoDRIVE simulator and configuring the communication bridge between the AutoDRIVE Simulator and ROS 2 Humble. The goal is to enable control and data acquisition for the F1TENTH vehicle for robotics and autonomous navigation projects.
-
-
 
 ---
 
-
-
 ## 📋 Prerequisites
-
-
-
 Before starting, ensure your environment meets the following requirements:
-
 
 * **Operating System:** ([Ubuntu 22.04](https://github.com/widegonz/Ubuntu-Installation))
 
 * **Middleware:** ([ROS 2 Humble](https://docs.ros.org/en/humble/Installation.html))
 
+---
 
+## Table of Contents
+
+- [Prerequisites](#prerequisites)
+- [1. Simulator Installation](#1-simulator-installation)
+  - [1.1 Download AutoDRIVE Simulator](#11-download-autodrive-simulator)
+  - [1.2 Extract the Simulator](#12-extract-the-simulator)
+  - [1.3 Open the Simulator Folder](#13-open-the-simulator-folder)
+  - [1.4 Grant Execution Permissions](#14-grant-execution-permissions)
+  - [1.5 Start AutoDRIVE Simulator](#15-start-autodrive-simulator)
+
+- [2. ROS 2 Bridge DevKit](#2-ros-2-bridge-devkit)
+  - [2.1 Workspace and Virtual Environment Setup](#21-workspace-and-virtual-environment-setup)
+  - [2.2 Configure the Virtual Environment and Install Dependencies](#22-configure-the-virtual-environment-and-install-dependencies)
+    - [2.2.1 Install ROS 2 System Dependencies](#221-install-ros-2-system-dependencies)
+    - [2.2.2 Create and Activate the Virtual Environment](#222-create-and-activate-the-virtual-environment)
+    - [2.2.3 Install Python Dependencies](#223-install-python-dependencies)
+    - [2.2.4 Critical Compatibility Patch for attrdict](#224-critical-compatibility-patch-for-attrdict)
+    - [2.2.5 Verify the Installation](#225-verify-the-installation)
+  - [2.3 Cloning and Organizing the Workspace](#23-cloning-and-organizing-the-workspace)
+    - [2.3.1 Clone the AutoDRIVE DevKit Branch](#231-clone-the-autodrive-devkit-branch)
+    - [2.3.2 Extract the ROS 2 Package](#232-extract-the-ros-2-package)
+    - [2.3.3 Remove the Original Repository Folder](#233-remove-the-original-repository-folder)
+  - [2.4 Compiling the Workspace](#24-compiling-the-workspace)
+
+- [3. Execution and Teleoperation](#3-execution-and-teleoperation)
+  - [3.1 Start the Communication Bridge](#31-start-the-communication-bridge)
+    - [Option A: Bridge with RViz Visualization](#option-a-bridge-with-rviz-visualization)
+    - [Option B: Headless Bridge](#option-b-headless-bridge)
+  - [3.2 Run AutoDRIVE Simulator](#32-run-autodrive-simulator)
+  - [3.3 Keyboard Control: Teleoperation](#33-keyboard-control-teleoperation)
+  - [3.4 Recommended Execution Order](#34-recommended-execution-order)
 
 ---
 
+## 1. Simulator Installation
 
+In this section, we will download and prepare AutoDRIVE Simulator for Linux.
 
+AutoDRIVE Simulator is the graphical simulation environment where the F1TENTH vehicle will run. Later, this simulator will be connected to ROS 2 through the AutoDRIVE DevKit bridge.
 
+### 1.1 Download AutoDRIVE Simulator
 
+Download the compressed Linux version of AutoDRIVE Simulator from the official release:
 
+[Download AutoDRIVE Simulator Linux](https://github.com/Tinker-Twins/AutoDRIVE/releases/download/Simulator-0.3.0/AutoDRIVE_Simulator_Linux.zip)
 
-## 🕹️ 1. Simulator Installation
+Save the `.zip` file in an accessible location, for example:
 
+```text
+~/Downloads
+```
 
+### 1.2 Extract the Simulator
 
-Follow these steps to prepare the simulation environment:
+Extract the downloaded file and rename the extracted folder as:
 
+```text
+AutoDRIVE_Sim
+```
 
-1. **Download** the compressed file (.zip) of the simulator for Linux. 
-* ⬇️ [Download AutoDRIVE Simulator Linux](https://github.com/Tinker-Twins/AutoDRIVE/releases/download/Simulator-0.3.0/AutoDRIVE_Simulator_Linux.zip)
+For this tutorial, we assume the simulator is located at:
 
-2. **Save** the file in an accessible location and unzip it (e.g., ~/Downloads/AutoDRIVE_Sim).
+```text
+~/Downloads/AutoDRIVE_Sim
+```
 
-3. **Open the terminal** and navigate to the folder where you extracted the simulator.
+> [!NOTE]
+> If you extracted the simulator in a different folder, replace the path in the following commands with your actual location.
 
-   ```bash
+### 1.3 Open the Simulator Folder
 
-   cd ~/Downloads/AutoDRIVE_Sim
+Open a terminal and navigate to the simulator folder:
 
-4. Grant execution permissions to the main binary:
+```bash
+cd ~/Downloads/AutoDRIVE_Sim
+```
 
-      ```bash
+This folder should contain the main simulator executable:
 
-   chmod +x "AutoDRIVE Simulator.x86_64"
+```text
+AutoDRIVE Simulator.x86_64
+```
 
-5. Start the simulator by running the following command:
+### 1.4 Grant Execution Permissions
 
-     ```bash
+Before running the simulator, the main binary must have execution permissions.
 
-   ./"AutoDRIVE Simulator.x86_64"
+Run:
+
+```bash
+chmod +x "AutoDRIVE Simulator.x86_64"
+```
+
+This command allows Ubuntu to execute the simulator as a program.
+
+> [!NOTE]
+> This step is usually required only once after extracting the simulator.
+
+---
+
+### 1.5 Start AutoDRIVE Simulator
+
+Run the simulator with:
+
+```bash
+./"AutoDRIVE Simulator.x86_64"
+```
+
+The `./` indicates that the executable is located in the current directory.
+
+If the simulator starts correctly, the AutoDRIVE graphical interface should open.
+
+> [!IMPORTANT]
+> At this stage, the simulator may show its communication status as `Disconnected`. This is expected because the ROS 2 bridge has not been started yet. The connection will be established later in the execution section.
 
 ---
 
@@ -273,7 +340,7 @@ If both messages appear without errors, the system and virtual environment depen
 [Screencast from 06-26-2026 03:53:47 AM.webm](https://github.com/user-attachments/assets/df783665-119e-4cd0-a021-468c0ad4dc22)
 
 
-### 2.4 Cloning and Organizing the Workspace
+### 2.3 Cloning and Organizing the Workspace
 
 In this step, we will download the official AutoDRIVE repository and extract only the ROS 2 package required for this workspace.
 
@@ -281,7 +348,7 @@ AutoDRIVE includes several components, such as the Simulator, Testbed, DevKit, A
 
 The `src` folder is where ROS 2 source packages are placed before compilation. When `colcon build` is executed from the workspace root, it scans the `src` directory looking for valid ROS 2 packages. For this reason, we will move `autodrive_ros2` directly into `~/autodrive_ws/src`.
 
-#### 2.4.1 Clone the AutoDRIVE DevKit Branch
+#### 2.3.1 Clone the AutoDRIVE DevKit Branch
 
 Navigate to the workspace source folder:
 
@@ -297,7 +364,7 @@ git clone --single-branch --branch AutoDRIVE-Devkit https://github.com/Tinker-Tw
 
 The option `--branch AutoDRIVE-Devkit` selects the DevKit branch, while `--single-branch` avoids downloading unnecessary branch history from the repository.
 
-#### 2.4.2 Extract the ROS 2 Package
+#### 2.3.2 Extract the ROS 2 Package
 
 The ROS 2 package is located inside the following path:
 
@@ -334,7 +401,7 @@ The output should include:
 autodrive_ros2
 ```
 
-#### 2.4.3 Remove the Original Repository Folder
+#### 2.3.3 Remove the Original Repository Folder
 
 After extracting the required ROS 2 package, the rest of the cloned repository is no longer needed inside this workspace.
 
@@ -349,7 +416,7 @@ This cleanup prevents `colcon` from scanning unnecessary files or unrelated pack
 > [!IMPORTANT]
 > Only run this command after confirming that `autodrive_ros2` was successfully moved to `~/autodrive_ws/src`.
 
-### 2.5 Compiling the Workspace
+### 2.4 Compiling the Workspace
 
 Once the `src` folder is organized, the workspace can be compiled using `colcon`, the standard build tool used in ROS 2 workspaces.
 
