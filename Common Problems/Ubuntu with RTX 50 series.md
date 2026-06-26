@@ -26,8 +26,8 @@ The final result is still a fully usable Ubuntu 22.04 desktop system, but instal
 # Table of Contents
 
 - [1. Preparing the Installation Media](#1-preparing-the-installation-media)
-  - [1.1 Download Ubuntu Server](#11-download-ubuntu-server)
-  -  [1.2 Download Rufus](#12-download-rufus)
+  -   [1.1 Download Ubuntu Server](#11-download-ubuntu-server)
+  -   [1.2 Download Rufus](#12-download-rufus)
   -   [1.3 Create the Bootable USB Drive](#13-create-the-bootable-usb-drive)
   -   [1.4 Shrink the Windows Partition](#14-shrink-the-windows-partition)
   -   [1.5 BIOS/UEFI Settings](#15-BIOS/UEFI-Settings)
