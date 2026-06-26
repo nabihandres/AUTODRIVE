@@ -14,7 +14,6 @@ Before starting, ensure your environment meets the following requirements:
 ---
 
 ## Table of Contents
-
 - [Prerequisites](#prerequisites)
 - [1. Simulator Installation](#1-simulator-installation)
   - [1.1 Download AutoDRIVE Simulator](#11-download-autodrive-simulator)
@@ -22,7 +21,6 @@ Before starting, ensure your environment meets the following requirements:
   - [1.3 Open the Simulator Folder](#13-open-the-simulator-folder)
   - [1.4 Grant Execution Permissions](#14-grant-execution-permissions)
   - [1.5 Start AutoDRIVE Simulator](#15-start-autodrive-simulator)
-
 - [2. ROS 2 Bridge DevKit](#2-ros-2-bridge-devkit)
   - [2.1 Workspace and Virtual Environment Setup](#21-workspace-and-virtual-environment-setup)
   - [2.2 Configure the Virtual Environment and Install Dependencies](#22-configure-the-virtual-environment-and-install-dependencies)
@@ -36,7 +34,6 @@ Before starting, ensure your environment meets the following requirements:
     - [2.3.2 Extract the ROS 2 Package](#232-extract-the-ros-2-package)
     - [2.3.3 Remove the Original Repository Folder](#233-remove-the-original-repository-folder)
   - [2.4 Compiling the Workspace](#24-compiling-the-workspace)
-
 - [3. Execution and Teleoperation](#3-execution-and-teleoperation)
   - [3.1 Start the Communication Bridge](#31-start-the-communication-bridge)
     - [Option A: Bridge with RViz Visualization](#option-a-bridge-with-rviz-visualization)
