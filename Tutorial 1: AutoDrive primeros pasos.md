@@ -425,6 +425,7 @@ After extracting the required ROS 2 package, the rest of the cloned repository i
 Remove the original `AutoDRIVE` folder:
 
 ```bash
+rm -rf Autodrive
 rm -rf build install log
 ```
 
