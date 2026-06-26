@@ -166,7 +166,7 @@ PY
 
 If the message appears without errors, the virtual environment is correctly configured.
 
-También corregí el detalle de usar `pip` directamente por `python -m pip`, porque así te aseguras de instalar los paquetes dentro del Python activo del `venv`, no en otra instalación del sistema.
+
 
 ---
 
