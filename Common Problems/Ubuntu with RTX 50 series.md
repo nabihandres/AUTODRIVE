@@ -26,14 +26,15 @@ The final result is still a fully usable Ubuntu 22.04 desktop system, but instal
 # Table of Contents
 
 - [1. Preparing the Installation Media](#1-preparing-the-installation-media)
+- [1. Preparing the Installation Media](#1-preparing-the-installation-media)
   - [1.1 Download Ubuntu Server](#11-download-ubuntu-server)
-  - [1.2 Download Rufus](#12-download-rufus)
-  - [1.3 Create the Bootable USB Drive](#13-create-the-bootable-usb-drive)
-  - [1.4 Shrink the Windows Partition](#14-shrink-the-windows-partition)
-  - [1.5 BIOS/UEFI Settings](#15-biosuefi-settings)
-  - [1.6 Boot from the USB Drive](#16-boot-from-the-usb-drive)
-  - [1.7 Launch the Ubuntu Server Installer](#17-launch-the-ubuntu-server-installer)
-  - [1.8 Initial Ubuntu Server Configuration](#18-initial-ubuntu-server-configuration)
+  -  [1.2 Download Rufus](#12-download-rufus)
+  -   [1.3 Create the Bootable USB Drive](#13-create-the-bootable-usb-drive)
+  -   [1.4 Shrink the Windows Partition](#14-shrink-the-windows-partition)
+  -   [1.5 BIOS/UEFI Settings](#15-BIOS/UEFI-Settings)
+  -   [1.6 Boot from the USB Drive](#16-Boot-from-the-USB-Drive)
+  -   [1.7 Launch the Ubuntu Server Installer](#17-Launch-the-Ubuntu-Server-Installer)
+  -   [1.8 Initial Ubuntu Server Configuration](#18-Initial-Ubuntu-Server-Configuration)
 
 - [2. Installing Ubuntu Server](#2-installing-ubuntu-server)
   - [2.1 Manual Storage Configuration](#21-manual-storage-configuration)
