@@ -129,21 +129,7 @@ https://github.com/user-attachments/assets/138e6208-1878-4c91-868f-5aa16490a12a
 
 ### Architecture
 
-```text
-[linear_driver_node] → /aeb_f110/sources/auto/*   ───┐
-                                                     │   [mux_node]  ←  [mode_switcher_node]
-[teleop_keyboard]    → /aeb_f110/sources/teleop/* ───┘       │
-                                                             ↓
-                                              /aeb_f110/throttle_request
-                                              /aeb_f110/steering_request
-                                                             │
-                                                       [aeb_node]
-                                                             │
-                                              /autodrive/f1tenth_1/throttle_command
-                                              /autodrive/f1tenth_1/steering_command
-                                                             │
-                                                        [simulator]
-```
+<img width="2412" height="1259" alt="Tutorial 2_arquitectura comunicacion" src="https://github.com/user-attachments/assets/bbb20265-549f-4c90-a313-58de5dc17e55" />
 
 The system is organized as a safety layer between the driving command sources and the AutoDRIVE simulator.
 
