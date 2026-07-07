@@ -6,14 +6,6 @@ Safety and autonomous driving stack for the F1TENTH platform on the AutoDRIVE si
 
 ## Prerequisites
 
-- **[Ubuntu 22.04](https://releases.ubuntu.com/22.04/)**
-- **[ROS 2 Humble](https://docs.ros.org/en/humble/)** sourced (`/opt/ros/humble/setup.bash`)
-- **AutoDRIVE DevKit** workspace (`~/autodrive_ws`) set up and built — see [AutoDRIVE_DevKit_Starter](https://github.com/hector-la/AutoDRIVE_DevKit_Starter/tree/main)
-- Python virtual environment at `~/autodrive_ws/venv/`
-
-
-## Prerequisites
-
 Before running this package, make sure you have the following requirements installed and configured:
 
 - **[Ubuntu 22.04](https://releases.ubuntu.com/22.04/)**
@@ -21,8 +13,7 @@ Before running this package, make sure you have the following requirements insta
 - **AutoDRIVE DevKit** workspace (`~/autodrive_ws`) set up and built — see [AutoDRIVE_DevKit_Starter](https://github.com/hector-la/AutoDRIVE_DevKit_Starter/tree/main)
 - Python virtual environment at `~/autodrive_ws/venv/`
 - 
-It is also recommended to complete [Tutorial 1](./tutorial 1: AutoDrive Installation and Setup.md) before using this package, since it explains the basic setup and workspace configuration required to run the AutoDRIVE F1TENTH environment properly.
-
+It is also recommended to complete <a href="./Tutorial 1: AutoDrive Installation and Setup.md">Tutorial 1</a> before using this package, since it explains the basic setup and workspace configuration required to run the AutoDRIVE F1TENTH environment properly.
 ---
 
 ## Table of Contents
