@@ -1,15 +1,10 @@
 # AEB F110 🚗💨
 
-![ROS 2](https://img.shields.io/badge/ROS_2-Humble-blue?logo=ros)
-![Python](https://img.shields.io/badge/Python-3.10-blue?logo=python)
-![Platform](https://img.shields.io/badge/Platform-Ubuntu_22.04-orange?logo=ubuntu)
-![License](https://img.shields.io/badge/License-MIT-green)
-
 Safety and autonomous driving stack for the F1TENTH platform on the AutoDRIVE simulator. The system provides Automatic Emergency Braking (AEB) via iTTC and supports both autonomous straight-line driving and manual teleoperation, with a keyboard-driven multiplexer to switch between sources at runtime.
 
 ---
 
-## 📋 Table of Contents
+## Table of Contents
 
 - [Step 1: Prerequisites](#step-1-prerequisites)
 - [Step 2: Installation](#step-2-installation)
