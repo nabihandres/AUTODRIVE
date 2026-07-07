@@ -126,9 +126,9 @@ ros2 run autodrive_f1tenth teleop_keyboard --ros-args \
 ### Architecture
 
 ```text
-[linear_driver_node] → /aeb_f110/sources/auto/*   ─→┐
-                                                      │  [mux_node]  ←  [mode_switcher_node]
-[teleop_keyboard]    → /aeb_f110/sources/teleop/* ─→┘       │
+[linear_driver_node] → /aeb_f110/sources/auto/*   ───┐
+                                                     │   [mux_node]  ←  [mode_switcher_node]
+[teleop_keyboard]    → /aeb_f110/sources/teleop/* ───┘       │
                                                              ↓
                                               /aeb_f110/throttle_request
                                               /aeb_f110/steering_request
@@ -141,13 +141,30 @@ ros2 run autodrive_f1tenth teleop_keyboard --ros-args \
                                                         [simulator]
 ```
 
-The **mux node** is the single publisher to the AEB input topics. It selects which source's commands to forward based on the active source, and zeros the throttle if the active source stops publishing (watchdog). The **AEB node** is the final safety gate — no source can bypass it.
+The system is organized as a safety layer between the driving command sources and the AutoDRIVE simulator.
+
+The **mux node** receives commands from different sources, such as the autonomous linear_driver_node and the manual teleop_keyboard. It selects which source is currently active and forwards only that source to the AEB input topics.
+
+The **mode switcher node** allows changing the active source at runtime between autonomous mode and teleoperation mode.
+
+The **AEB node** acts as the final safety gate before commands are sent to the simulator. All throttle and steering commands must pass through this node, so no driving source can bypass the emergency braking logic.
+
+If the active source stops publishing commands, the multiplexer watchdog automatically sets the throttle to zero.
 
 ### Speed estimation
 
-The AEB node subscribes to both wheel encoders (`left_encoder`, `right_encoder`) and differentiates the angular position over time to obtain a per-wheel linear speed. The longitudinal speed estimate is the average of both wheels.
+The AEB node subscribes to both wheel encoders:
+
+- `left_encoder`
+- `right_encoder`
+
+For each wheel, the angular position is differentiated over time to estimate angular velocity. Then, using the wheel radius, the node converts angular velocity into linear wheel speed.
+
+The longitudinal vehicle speed is estimated as the average of the left and right wheel speeds.
 
 ### iTTC computation
+
+The AEB logic is based on **instantaneous Time-To-Collision (iTTC)**. This metric estimates how much time remains before the vehicle collides with an obstacle, assuming the current speed is maintained.
 
 On every LiDAR scan, the AEB node:
 
@@ -159,8 +176,17 @@ On every LiDAR scan, the AEB node:
    range_rate_i = v · cos(θᵢ)
    TTC_i        = rᵢ / range_rate_i   (only where range_rate_i > 0)
    ```
+where:
+
+- v is the estimated longitudinal vehicle speed.
+- θᵢ is the angle of the LiDAR beam.
+- range_rate_i represents how fast the vehicle is approaching the obstacle along that beam.
+- rᵢ is the LiDAR range measurement for beam i.
+- The TTC is computed only when range_rate_i > 0, meaning the vehicle is moving toward the obstacle.
 
 4. **Triggers braking** if `min(TTC) < ttc_threshold`.
+   
+- If the minimum TTC is below the configured threshold, the AEB node overrides the throttle command and activates braking.
 
 ### State machine
 
@@ -169,7 +195,7 @@ On every LiDAR scan, the AEB node:
 | `NORMAL` | Throttle commands pass through unchanged |
 | `BRAKING` | Throttle is overridden to `brake_command` (`0.0`) regardless of source input |
 
-The latch is released **only** when the active source sends a negative throttle (reverse), ensuring deliberate intent to resume.
+The brake latch is released **only** when the active source sends a negative throttle command. This requires deliberate reverse input before the vehicle can resume normal operation.
 
 ---
 
