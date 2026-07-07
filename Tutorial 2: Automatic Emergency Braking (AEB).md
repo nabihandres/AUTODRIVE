@@ -33,7 +33,7 @@ It is also recommended to complete <a href="./Tutorial 1: AutoDrive Installation
 
 ## Step 1: Installation
 
-Clone this package into the AutoDRIVE workspace source directory and build it:
+Clone this package into the AutoDRIVE workspace source directory. The repository will be saved locally as `aeb_f110`:
 
 ```bash
 cd ~/autodrive_ws/src
@@ -50,6 +50,8 @@ colcon build --packages-select aeb_f110
 ## Step 2: Usage
 
 First, **open the AutoDRIVE Simulator** application. Then open the following terminals from `~/autodrive_ws`.
+
+> **Important:** Run the terminals in the order shown below. The simulator must be running before launching the AEB system.
 
 ### Terminal 1: Simulator bridge
 
@@ -79,8 +81,11 @@ The vehicle starts driving autonomously in a straight line. AEB is active from t
 
 ### Terminals 3 & 4: Mode switcher + teleop keyboard (optional)
 
-Only needed if you want to switch between autonomous and manual mode at runtime. Run each in its own terminal and press `[T]` in the mode switcher to hand control to the teleop.
+Only needed if you want to switch between autonomous and manual mode at runtime. Run each command in a separate terminal.
 
+The teleop commands are remapped to the aeb_f110 input topics, so manual driving still passes through the multiplexer and the AEB safety node.
+
+To switch to manual mode, press [T] in the mode switcher terminal. To return to autonomous mode, press [A].
 
 #### Terminal 3: Mode switcher
 
