@@ -119,6 +119,8 @@ ros2 run autodrive_f1tenth teleop_keyboard --ros-args \
   -r /autodrive/f1tenth_1/steering_command:=/aeb_f110/sources/teleop/steering
 ```
 
+VIDEO DE USO DE LOS NODOS MUX Y DE AEB
+
 ---
 
 ## How it works
@@ -298,7 +300,7 @@ All parameters can be tuned in [`launch/auto.launch.py`](launch/auto.launch.py).
 
 ---
 
-## 📬 Contact
+## Contact
 
 This project was developed as part of **AIROS – ESPOL**.
 
