@@ -1,32 +1,45 @@
-# AEB F110 🚗💨
+# AEB F110 
 
 Safety and autonomous driving stack for the F1TENTH platform on the AutoDRIVE simulator. The system provides Automatic Emergency Braking (AEB) via iTTC and supports both autonomous straight-line driving and manual teleoperation, with a keyboard-driven multiplexer to switch between sources at runtime.
 
 ---
 
-## Table of Contents
-
-- [Step 1: Prerequisites](#step-1-prerequisites)
-- [Step 2: Installation](#step-2-installation)
-- [Step 3: Usage](#step-3-usage)
-- [How it works](#how-it-works)
-- [Project structure](#project-structure)
-- [Parameters](#parameters)
-- [ROS 2 Interface](#ros-2-interface)
-- [Contact](#contact)
-
----
-
-## Step 1: Prerequisites
+## Prerequisites
 
 - **[Ubuntu 22.04](https://releases.ubuntu.com/22.04/)**
 - **[ROS 2 Humble](https://docs.ros.org/en/humble/)** sourced (`/opt/ros/humble/setup.bash`)
 - **AutoDRIVE DevKit** workspace (`~/autodrive_ws`) set up and built — see [AutoDRIVE_DevKit_Starter](https://github.com/hector-la/AutoDRIVE_DevKit_Starter/tree/main)
 - Python virtual environment at `~/autodrive_ws/venv/`
 
+
+## Prerequisites
+
+Before running this package, make sure you have the following requirements installed and configured:
+
+- **[Ubuntu 22.04](https://releases.ubuntu.com/22.04/)**
+- **[ROS 2 Humble](https://docs.ros.org/en/humble/)** sourced (`/opt/ros/humble/setup.bash`)
+- **AutoDRIVE DevKit** workspace (`~/autodrive_ws`) set up and built — see [AutoDRIVE_DevKit_Starter](https://github.com/hector-la/AutoDRIVE_DevKit_Starter/tree/main)
+- Python virtual environment at `~/autodrive_ws/venv/`
+- 
+It is also recommended to complete [Tutorial 1](./tutorial 1: AutoDrive Installation and Setup.md) before using this package, since it explains the basic setup and workspace configuration required to run the AutoDRIVE F1TENTH environment properly.
+
 ---
 
-## Step 2: Installation
+## Table of Contents
+
+- [Prerequisites](#prerequisites)
+- [Step 1: Installation](#step-1-installation)
+- [Step 2: Usage](#step-2-usage)
+- [How it works](#how-it-works)
+- [Project structure](#project-structure)
+- [Parameters](#parameters)
+- [ROS 2 Interface](#ros-2-interface)
+- [Contact](#contact)
+
+
+---
+
+## Step 1: Installation
 
 Clone this package into the AutoDRIVE workspace source directory and build it:
 
@@ -42,7 +55,7 @@ colcon build --packages-select aeb_f110
 
 ---
 
-## Step 3: Usage
+## Step 2: Usage
 
 First, **open the AutoDRIVE Simulator** application. Then open the following terminals from `~/autodrive_ws`.
 
