@@ -9,15 +9,11 @@ Safety and autonomous driving stack for the F1TENTH platform on the AutoDRIVE si
 
 ---
 
-![AEB demo](demo.gif)
-
----
-
 ## 📋 Table of Contents
 
-- [Step 1 — Prerequisites](#step-1-prerequisites)
-- [Step 2 — Installation](#step-2-installation)
-- [Step 3 — Usage](#step-3-usage)
+- [Step 1: Prerequisites](#step-1-prerequisites)
+- [Step 2: Installation](#step-2-installation)
+- [Step 3: Usage](#step-3-usage)
 - [How it works](#how-it-works)
 - [Project structure](#project-structure)
 - [Parameters](#parameters)
@@ -26,7 +22,7 @@ Safety and autonomous driving stack for the F1TENTH platform on the AutoDRIVE si
 
 ---
 
-## Step 1. Prerequisites 📦
+## Step 1: Prerequisites
 
 - **[Ubuntu 22.04](https://releases.ubuntu.com/22.04/)**
 - **[ROS 2 Humble](https://docs.ros.org/en/humble/)** sourced (`/opt/ros/humble/setup.bash`)
@@ -35,7 +31,7 @@ Safety and autonomous driving stack for the F1TENTH platform on the AutoDRIVE si
 
 ---
 
-## Step 2. Installation ⚙️
+## Step 2: Installation
 
 Clone this package into the AutoDRIVE workspace source directory and build it:
 
@@ -51,11 +47,11 @@ colcon build --packages-select aeb_f110
 
 ---
 
-## Step 3. Usage 🚀
+## Step 3: Usage
 
 First, **open the AutoDRIVE Simulator** application. Then open the following terminals from `~/autodrive_ws`.
 
-### Terminal 1 — Simulator bridge
+### Terminal 1: Simulator bridge
 
 ```bash
 source /opt/ros/humble/setup.bash
@@ -65,10 +61,13 @@ source install/setup.bash
 ros2 launch autodrive_f1tenth simulator_bringup_rviz.launch.py
 ```
 
-> For a headless run replace the last line with:
-> `ros2 launch autodrive_f1tenth simulator_bringup_headless.launch.py`
+> **Headless mode:** For a headless run, replace the last line with:
+>
+> ```bash
+> ros2 launch autodrive_f1tenth simulator_bringup_headless.launch.py
+> ```
 
-### Terminal 2 — AEB + multiplexer + linear driver
+### Terminal 2: AEB + multiplexer + linear driver
 
 ```bash
 source /opt/ros/humble/setup.bash
@@ -78,11 +77,12 @@ ros2 launch aeb_f110 auto.launch.py
 
 The vehicle starts driving autonomously in a straight line. AEB is active from this point.
 
-### Terminals 3 & 4 — Mode switcher + Teleop keyboard (optional)
+### Terminals 3 & 4: Mode switcher + teleop keyboard (optional)
 
 Only needed if you want to switch between autonomous and manual mode at runtime. Run each in its own terminal and press `[T]` in the mode switcher to hand control to the teleop.
 
-**Terminal 3 — Mode switcher**
+
+#### Terminal 3: Mode switcher
 
 ```bash
 source /opt/ros/humble/setup.bash
@@ -90,7 +90,7 @@ source venv/bin/activate && source install/setup.bash
 ros2 run aeb_f110 mode_switcher_node
 ```
 
-```
+```text
 ---------------------------------------
 AEB F110 - Mode Switcher
 ---------------------------------------
@@ -104,7 +104,7 @@ NOTE: Press keys within this terminal
 ---------------------------------------
 ```
 
-**Terminal 4 — Teleop keyboard**
+#### Terminal 4: Teleop keyboard
 
 ```bash
 source /opt/ros/humble/setup.bash
@@ -116,11 +116,11 @@ ros2 run autodrive_f1tenth teleop_keyboard --ros-args \
 
 ---
 
-## ⚙️ How it works
+## How it works
 
 ### Architecture
 
-```
+```text
 [linear_driver_node] → /aeb_f110/sources/auto/*   ─→┐
                                                       │  [mux_node]  ←  [mode_switcher_node]
 [teleop_keyboard]    → /aeb_f110/sources/teleop/* ─→┘       │
@@ -144,13 +144,13 @@ The AEB node subscribes to both wheel encoders (`left_encoder`, `right_encoder`)
 
 ### iTTC computation
 
-On every LiDAR scan the AEB node:
+On every LiDAR scan, the AEB node:
 
 1. **Filters invalid readings** — discards `inf`, `NaN`, and ranges outside `[range_min_cutoff, range_max]`.
 2. **Applies an angular window** — keeps only the beams within ±`angular_window_deg` of the forward direction.
 3. **Computes the instantaneous Time-To-Collision (iTTC)** for each remaining beam:
 
-   ```
+   ```text
    range_rate_i = v · cos(θᵢ)
    TTC_i        = rᵢ / range_rate_i   (only where range_rate_i > 0)
    ```
@@ -162,15 +162,15 @@ On every LiDAR scan the AEB node:
 | State | Behaviour |
 |---|---|
 | `NORMAL` | Throttle commands pass through unchanged |
-| `BRAKING` | Throttle is overridden to `brake_command` (0.0) regardless of source input |
+| `BRAKING` | Throttle is overridden to `brake_command` (`0.0`) regardless of source input |
 
 The latch is released **only** when the active source sends a negative throttle (reverse), ensuring deliberate intent to resume.
 
 ---
 
-## 📁 Project structure
+## Project structure
 
-```
+```text
 aeb_f110/
 ├── aeb_f110/
 │   ├── __init__.py
@@ -191,14 +191,15 @@ aeb_f110/
 
 ---
 
-## 🔧 Parameters
+
+## Parameters
 
 ### `aeb_node`
 
 All parameters can be tuned in [`launch/auto.launch.py`](launch/auto.launch.py).
 
 | Parameter | Default | Description |
-|---|---|---|
+|---|---:|---|
 | `wheel_radius` | `0.058` m | F1TENTH simulated wheel radius |
 | `ttc_threshold` | `0.66` s | Minimum TTC before braking is triggered |
 | `range_min_cutoff` | `0.13` m | Minimum valid LiDAR range (filters close-range noise) |
@@ -211,21 +212,21 @@ All parameters can be tuned in [`launch/auto.launch.py`](launch/auto.launch.py).
 ### `linear_driver_node`
 
 | Parameter | Default | Description |
-|---|---|---|
+|---|---:|---|
 | `throttle` | `0.3` | Forward throttle value `[0.0, 1.0]` |
-| `steering` | `0.0` | Steering angle (0.0 = straight) |
+| `steering` | `0.0` | Steering angle (`0.0` = straight) |
 | `publish_rate` | `20.0` Hz | Command publish frequency |
 
 ### `mux_node`
 
 | Parameter | Default | Description |
-|---|---|---|
+|---|---:|---|
 | `active_source` | `'auto'` | Source active at startup (`'auto'` or `'teleop'`) |
 | `source_timeout` | `0.5` s | Time without messages before watchdog zeros throttle |
 
 ---
 
-## 🔌 ROS 2 Interface
+## ROS 2 Interface
 
 ### `aeb_node`
 
@@ -256,7 +257,7 @@ All parameters can be tuned in [`launch/auto.launch.py`](launch/auto.launch.py).
 | Direction | Topic | Type | Description |
 |---|---|---|---|
 | Pub | `/aeb_f110/sources/auto/throttle` | `std_msgs/Float32` | Constant forward throttle |
-| Pub | `/aeb_f110/sources/auto/steering` | `std_msgs/Float32` | Constant steering (0.0) |
+| Pub | `/aeb_f110/sources/auto/steering` | `std_msgs/Float32` | Constant steering (`0.0`) |
 
 ### `mode_switcher_node`
 
@@ -276,8 +277,8 @@ GitHub: [https://github.com/Raulvillaes](https://github.com/Raulvillaes)
 **Micaela Anamise**
 GitHub: [https://github.com/carolinanamise13-hub](https://github.com/carolinanamise13-hub)
 
-"Maykoll Vanegas"
-Github: INSERTAR ENLACE GITHUB
+**Maykoll Vanegas**
+GitHub: [https://github.com/VanegasMaykoll](https://github.com/VanegasMaykoll)
 ---
 
 *AIROS – ESPOL*
