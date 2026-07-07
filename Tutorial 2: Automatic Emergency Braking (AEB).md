@@ -191,24 +191,7 @@ The brake latch is released **only** when the active source sends a negative thr
 
 ## Project structure
 
-```text
-aeb_f110/
-├── aeb_f110/
-│   ├── __init__.py
-│   ├── aeb_node.py             # AEB safety node (iTTC + brake latch)
-│   ├── mux_node.py             # Command multiplexer (source arbitration + watchdog)
-│   ├── linear_driver_node.py   # Autonomous straight-line driver
-│   └── mode_switcher_node.py   # Keyboard interface to switch active source
-├── launch/
-│   ├── auto.launch.py          # Launches AEB + mux + linear driver
-│   └── manual.launch.py        # Launches AEB + mux (teleop active by default)
-├── resource/
-│   └── aeb_f110
-├── demo.gif
-├── package.xml
-├── setup.cfg
-└── setup.py
-```
+<img width="2206" height="2088" alt="Tutorial 2_estructura de archivos" src="https://github.com/user-attachments/assets/9b77bfa7-37b1-4b0b-8b12-8899b06bdb4d" />
 
 ---
 
