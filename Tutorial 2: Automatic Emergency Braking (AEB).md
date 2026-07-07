@@ -45,6 +45,8 @@ source venv/bin/activate
 colcon build --packages-select aeb_f110
 ```
 
+https://github.com/user-attachments/assets/2afd1f61-ac40-4068-ab7e-08a9d9e49b7b
+
 ---
 
 ## Step 2: Usage
@@ -119,7 +121,7 @@ ros2 run autodrive_f1tenth teleop_keyboard --ros-args \
   -r /autodrive/f1tenth_1/steering_command:=/aeb_f110/sources/teleop/steering
 ```
 
-VIDEO DE USO DE LOS NODOS MUX Y DE AEB
+https://github.com/user-attachments/assets/138e6208-1878-4c91-868f-5aa16490a12a
 
 ---
 
