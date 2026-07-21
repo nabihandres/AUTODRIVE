@@ -4,8 +4,6 @@
 
 SLAM (*Simultaneous Localization and Mapping*) is a technique that allows a robot to build a map of an unknown environment while simultaneously estimating its position within that map. It combines sensor measurements, such as LiDAR scans, with the vehicle's position and orientation information.
 
-<img width="105" height="311" alt="F1tenth_Mapa" src="https://github.com/user-attachments/assets/6aaf3a5f-1d95-44da-9a20-be8c280ee25d" />
-
 In this tutorial, `slam_toolbox` will be configured in ROS 2 to generate a 2D occupancy map of the AutoDRIVE F1TENTH circuit. The required TF frames and topics will be verified, the SLAM parameters will be adapted to the simulator, the system will be launched in the correct order, and the final map will be visualized and saved from RViz2.
 
 ## Prerequisites
@@ -34,8 +32,7 @@ source install/setup.bash
 1. [Installing and Understanding SLAM Toolbox Modes](#1-installing-and-understanding-slam-toolbox-modes)
 2. [Copying and Configuring the SLAM Toolbox Parameters](#2-copying-and-configuring-the-slam-toolbox-parameters)
 3. [Launching the System in the Correct Order](#3-launching-the-system-in-the-correct-order)
-4. [Open a New RViz2 Window and configure the view](#4-Open-a-New-RViz2-Window-and-configure-the-view)
-5. [Saving and Serializing the Map](#5-saving-and-serializing-the-map)
+4. [Saving and Serializing the Map](#5-saving-and-serializing-the-map)
 
 # 1. Installing and Understanding SLAM Toolbox Modes
 
@@ -57,9 +54,7 @@ ros2 pkg prefix slam_toolbox
 
 The expected output is similar to:
 
-```text
-/opt/ros/humble
-```
+<img width="946" height="65" alt="Screenshot from 2026-07-20 20-07-09" src="https://github.com/user-attachments/assets/e6668779-5a3d-4f53-955c-6c0c4b93ab63" />
 
 The available launch files can also be checked with:
 
@@ -155,6 +150,8 @@ The following file should be listed:
 ```text
 mapper_params_online_async.yaml
 ```
+video corto
+
 ## 2.3. Verify the Actual LiDAR Topic
 
 AutoDRIVE may show a `/scan` topic, but in this configuration that topic does not have an active publisher. The topic containing the actual LiDAR measurements is:
@@ -202,16 +199,6 @@ A topic can appear in `ros2 topic list` when a subscriber exists, even if no nod
 With Unity and the AutoDRIVE bridge running, generate the TF tree:
 
 CAPTURA DE TFS DE AUTODRIVE
-
-The most important transformations can also be checked directly:
-
-```bash
-ros2 run tf2_ros tf2_echo map f1tenth_1
-```
-
-```bash
-ros2 run tf2_ros tf2_echo f1tenth_1 lidar
-```
 
 The relevant frames are:
 
@@ -297,6 +284,8 @@ Ctrl + O
 Enter
 Ctrl + X
 ```
+Video corto de parametros
+
 # 3. Launching the System in the Correct Order
 
 The startup sequence is important because `/clock`, TF, and the LiDAR messages must begin with consistent timestamps.
@@ -343,20 +332,6 @@ Before starting `slam_toolbox`, wait approximately 3 to 5 seconds so that the br
 - `/clock`.
 - `/tf` and `/tf_static`.
 - `/autodrive/f1tenth_1/lidar`.
-
-The data can be verified with:
-
-```bash
-ros2 topic echo /clock --once
-```
-
-```bash
-ros2 topic echo /autodrive/f1tenth_1/lidar --once
-```
-
-```bash
-ros2 run tf2_ros tf2_echo map f1tenth_1
-```
 
 > Do not restart Unity while `slam_toolbox` remains active. Restarting the simulator can cause simulation time to move backward and generate `TF_OLD_DATA` warnings.
 
@@ -410,7 +385,7 @@ use_sim_time:=true
 
 If `slam_toolbox` used the computer's real-time clock while the sensors used simulation time, transformations could fail, messages could be considered too old, and scans could be discarded.
 
-# 4. Open a New RViz2 Window and configure the view
+# 3.6 Open a New RViz2 Window and configure the view
 
 In a new terminal:
 
@@ -425,9 +400,9 @@ rviz2
 
 VIDEO DE RVIZ2 CON EL SLAM
 
-# 5. Saving and Serializing the Map
+# 4. Saving and Serializing the Map
 
-## 5.1. Create a Folder for the Maps
+## 4.1. Create a Folder for the Maps
 
 Before saving, create a dedicated directory:
 
@@ -435,7 +410,7 @@ Before saving, create a dedicated directory:
 mkdir -p ~/autodrive_ws/maps
 ```
 
-## 5.2. Save the Occupancy Map
+## 4.2. Save the Occupancy Map
 
 In the `SlamToolboxPlugin` panel, locate the **Save Map** field.
 
@@ -470,7 +445,9 @@ Verify the generated files:
 ```bash
 ls -lh ~/autodrive_ws/maps
 ```
-## 5.3. Summary of the Launch Order
+Video de guardado del mapa
+
+## 4.3. Summary of the Launch Order
 
 The recommended sequence is:
 
