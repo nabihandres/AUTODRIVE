@@ -2,7 +2,7 @@
 
 Safety and autonomous driving stack for the F1TENTH platform on the AutoDRIVE simulator. The system provides Automatic Emergency Braking (AEB) via iTTC and supports both autonomous straight-line driving and manual teleoperation, with a keyboard-driven multiplexer to switch between sources at runtime.
 
-[For more details, see the presentation slides](https://docs.google.com/presentation/d/1dS8lkIInw06lXwexSZI711cMrWPK2m9qwgq_apSm1H4/edit?slide=id.p1#slide=id.p1)
+## [For more details, see the presentation slides](https://docs.google.com/presentation/d/1dS8lkIInw06lXwexSZI711cMrWPK2m9qwgq_apSm1H4/edit?slide=id.p1#slide=id.p1)
 
 ---
 
