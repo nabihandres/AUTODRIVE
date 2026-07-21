@@ -6,7 +6,7 @@ SLAM (*Simultaneous Localization and Mapping*) is a technique that allows a robo
 
 In this tutorial, `slam_toolbox` will be configured in ROS 2 to generate a 2D occupancy map of the AutoDRIVE F1TENTH circuit. The required TF frames and topics will be verified, the SLAM parameters will be adapted to the simulator, the system will be launched in the correct order, and the final map will be visualized and saved from RViz2.
 
-[For more details, see the presentation slides](https://docs.google.com/presentation/d/1uBdDF0ZZ1Ivoiy60LNiqdZcIdL7ho_cU/edit?slide=id.p1#slide=id.p1)
+## [For more details, see the presentation slides](https://docs.google.com/presentation/d/1uBdDF0ZZ1Ivoiy60LNiqdZcIdL7ho_cU/edit?slide=id.p1#slide=id.p1)
 
 ## Prerequisites
 
