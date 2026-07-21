@@ -142,10 +142,6 @@ mkdir -p ~/autodrive_ws/src
 cd ~/autodrive_ws
 ```
 
-Perfecto. Entonces dejamos **todas las dependencias base** en la misma sección: primero las dependencias ROS 2 del sistema con `apt`, luego las dependencias Python dentro del `venv`.
-
-Aquí tienes la sección actualizada completa:
-
 ### 2.2 Configure the Virtual Environment and Install Dependencies
 
 In this step, we will install the basic dependencies required by the AutoDRIVE ROS 2 bridge and create a Python virtual environment inside the workspace.
