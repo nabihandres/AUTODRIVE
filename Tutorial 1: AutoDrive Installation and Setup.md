@@ -2,6 +2,8 @@
 
 This repository provides a detailed guide to installing the AutoDRIVE simulator and configuring the communication bridge between the AutoDRIVE Simulator and ROS 2 Humble. The goal is to enable control and data acquisition for the F1TENTH vehicle for robotics and autonomous navigation projects.
 
+## [Ver diapositivas de la presentación](https://docs.google.com/presentation/d/1Yl-QCOvlGdIBSREwMPxfj50a_lk7E9fm8FWiSNKZ6dg/edit?slide=id.g3ccc816dfd6_0_11#slide=id.g3ccc816dfd6_0_11)
+
 ---
 
 ## 📋 Prerequisites
@@ -665,7 +667,8 @@ Following this order ensures that the simulator can find the bridge when the con
 Contributions are welcome! If you have a suggestion that would make this better, please fork the repo and create a pull request.
 
 ✉️ Contact
-Hector La Mota - [LinkedIn](https://www.linkedin.com/in/h%C3%A9ctor-la-mota-5a9b7a2a8/)
-Carolina Sanchez
-### SLIDES :https://docs.google.com/presentation/d/1Yl-QCOvlGdIBSREwMPxfj50a_lk7E9fm8FWiSNKZ6dg/edit?slide=id.p3#slide=id.p3
+1. Hector La Mota - [LinkedIn](https://www.linkedin.com/in/h%C3%A9ctor-la-mota-5a9b7a2a8/)
+2. Carolina Sanchez - [LinkedIn](https://www.linkedin.com/in/carolinas%C3%A1nchezcevallos/)
+3. Maykoll Vanegas - - [LinkedIn](https://www.linkedin.com/in/maykoll-steven-vanegas-silva-baa225219/)
+
 **AIROS - ESPOL**
