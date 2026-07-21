@@ -388,6 +388,8 @@ use_sim_time:=true
 
 If `slam_toolbox` used the computer's real-time clock while the sensors used simulation time, transformations could fail, messages could be considered too old, and scans could be discarded.
 
+https://github.com/user-attachments/assets/6b9abc5a-d619-44a7-9f7f-fcd6ae7397c6
+
 ## 3.6 Open a New RViz2 Window and configure the view
 
 In a new terminal:
@@ -401,7 +403,7 @@ source install/setup.bash
 rviz2
 ```
 
-VIDEO DE RVIZ2 CON EL SLAM
+https://github.com/user-attachments/assets/7b053f52-08fa-4f3c-991e-0adf26aa9da6
 
 # 4. Saving and Serializing the Map
 
@@ -448,7 +450,8 @@ Verify the generated files:
 ```bash
 ls -lh ~/autodrive_ws/maps
 ```
-Video de guardado del mapa
+
+https://github.com/user-attachments/assets/3edc3a61-28a6-4eec-bb46-1236e1b0deb1
 
 ## 4.3. Summary of the Launch Order
 
