@@ -150,7 +150,8 @@ The following file should be listed:
 ```text
 mapper_params_online_async.yaml
 ```
-video corto
+
+https://github.com/user-attachments/assets/ec72f3d0-fcc7-49e6-b294-5f6577d83274
 
 ## 2.3. Verify the Actual LiDAR Topic
 
@@ -198,7 +199,7 @@ A topic can appear in `ros2 topic list` when a subscriber exists, even if no nod
 
 With Unity and the AutoDRIVE bridge running, generate the TF tree:
 
-CAPTURA DE TFS DE AUTODRIVE
+https://github.com/user-attachments/assets/0f445c56-e137-44c8-bbf4-7394743876e6
 
 The relevant frames are:
 
@@ -230,6 +231,9 @@ slam_toolbox:
     use_map_saver: true
     mode: mapping # localization
 ```
+
+https://github.com/user-attachments/assets/42e4ccf5-f071-4bc8-811f-79bd5fc18f6c
+
 ### Main parameter descriptions
 
 #### `odom_frame: map`
@@ -284,7 +288,6 @@ Ctrl + O
 Enter
 Ctrl + X
 ```
-Video corto de parametros
 
 # 3. Launching the System in the Correct Order
 
@@ -385,7 +388,7 @@ use_sim_time:=true
 
 If `slam_toolbox` used the computer's real-time clock while the sensors used simulation time, transformations could fail, messages could be considered too old, and scans could be discarded.
 
-# 3.6 Open a New RViz2 Window and configure the view
+## 3.6 Open a New RViz2 Window and configure the view
 
 In a new terminal:
 
