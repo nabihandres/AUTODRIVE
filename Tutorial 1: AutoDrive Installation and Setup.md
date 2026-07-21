@@ -2,7 +2,7 @@
 
 This repository provides a detailed guide to installing the AutoDRIVE simulator and configuring the communication bridge between the AutoDRIVE Simulator and ROS 2 Humble. The goal is to enable control and data acquisition for the F1TENTH vehicle for robotics and autonomous navigation projects.
 
-## [Ver diapositivas de la presentación](https://docs.google.com/presentation/d/1Yl-QCOvlGdIBSREwMPxfj50a_lk7E9fm8FWiSNKZ6dg/edit?slide=id.g3ccc816dfd6_0_11#slide=id.g3ccc816dfd6_0_11)
+## [For more details, see the presentation slides](https://docs.google.com/presentation/d/1Yl-QCOvlGdIBSREwMPxfj50a_lk7E9fm8FWiSNKZ6dg/edit?slide=id.g3ccc816dfd6_0_11#slide=id.g3ccc816dfd6_0_11)
 
 ---
 
