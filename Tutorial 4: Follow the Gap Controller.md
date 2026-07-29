@@ -14,19 +14,9 @@ The controller uses the **Follow the Gap (FTG)** method. Instead of generating a
 6. Steer toward the center of the selected gap.
 7. Adjust the throttle according to the steering angle.
 
-> This is an introductory implementation intended to explain the basic perception-to-control pipeline. It is not yet a competition-grade racing controller.
-
----
-
 ## Laboratory Material
 
 - **Slides:** [Tutorial 4 presentation](PASTE_PPT_LINK_HERE)
-- **Repository:** [AUTODRIVE course repository](https://github.com/nabihandres/AUTODRIVE/tree/main)
-- **Demonstration video:** [Follow the Gap result](https://drive.google.com/file/d/1-0ueHXua01EAlZdTATlNUiUPNk7Jf6PK/view?usp=sharing)
-
-> Replace `PASTE_PPT_LINK_HERE` with the final link to the laboratory slides.
-
----
 
 ## Learning Objectives
 
@@ -38,9 +28,6 @@ After completing this laboratory, students should be able to:
 - Detect the largest valid free-space gap.
 - Convert a target LiDAR index into a steering command.
 - Compile and execute a C++ ROS 2 node with `ament_cmake`.
-- Use RViz to inspect the processed scan and steering direction.
-
----
 
 # 1. Prerequisites
 
@@ -87,21 +74,19 @@ rosdep update
 
 If `rosdep` reports that it was already initialized, continue with the next step.
 
----
-
 # 2. Workspace and Python Virtual Environment
 
 This tutorial uses the workspace:
 
 ```text
-~/autodrive_ws_slam
+~/autodrive_ws
 ```
 
 Create it if necessary:
 
 ```bash
-mkdir -p ~/autodrive_ws_slam/src
-cd ~/autodrive_ws_slam
+mkdir -p ~/autodrive_ws/src
+cd ~/autodrive_ws
 ```
 
 Create a virtual environment that can also access the ROS 2 Python packages installed in the system:
@@ -113,13 +98,13 @@ python3 -m venv venv --system-site-packages
 Activate it:
 
 ```bash
-source ~/autodrive_ws_slam/venv/bin/activate
+source ~/autodrive_ws/venv/bin/activate
 ```
 
 Prevent `colcon` from scanning the internal folders of the virtual environment:
 
 ```bash
-touch ~/autodrive_ws_slam/venv/COLCON_IGNORE
+touch ~/autodrive_ws/venv/COLCON_IGNORE
 ```
 
 Install the project-specific Python tools inside the virtual environment:
@@ -145,13 +130,11 @@ python -c "from gevent import pywsgi; print('gevent OK')"
 Expected paths:
 
 ```text
-/home/<user>/autodrive_ws_slam/venv/bin/python
-/home/<user>/autodrive_ws_slam/venv/bin/colcon
+/home/<user>/autodrive_ws/venv/bin/python
+/home/<user>/autodrive_ws/venv/bin/colcon
 ```
 
 > The virtual environment isolates the Python dependencies used by this project. The C++ compiler and the ROS 2 libraries continue to come from the Ubuntu and ROS 2 Humble installations.
-
----
 
 # 3. Download Only the Follow the Gap Folder
 
@@ -164,7 +147,7 @@ f1tenth-gap-follow-autodrive/
 Use a **sparse checkout** so Git checks out only that project folder instead of the complete repository.
 
 ```bash
-cd ~/autodrive_ws_slam/src
+cd ~/autodrive_ws/src
 
 git clone \
   --depth 1 \
@@ -187,7 +170,7 @@ find f1tenth-gap-follow-autodrive -maxdepth 3 -type f | sort
 The ROS 2 package should be located at:
 
 ```text
-~/autodrive_ws_slam/src/autodrive_course/
+~/autodrive_ws/src/autodrive_course/
 └── f1tenth-gap-follow-autodrive/
     └── gap_follow/
         ├── CMakeLists.txt
@@ -199,26 +182,24 @@ The ROS 2 package should be located at:
 Git still creates the repository metadata in:
 
 ```text
-~/autodrive_ws_slam/src/autodrive_course/.git
+~/autodrive_ws/src/autodrive_course/.git
 ```
 
 However, the working tree contains only the selected course project and the repository-level metadata required by Git.
-
----
 
 # 4. Install ROS 2 Dependencies
 
 Return to the workspace root:
 
 ```bash
-cd ~/autodrive_ws_slam
+cd ~/autodrive_ws
 ```
 
 Load ROS 2 and activate the virtual environment:
 
 ```bash
 source /opt/ros/humble/setup.bash
-source ~/autodrive_ws_slam/venv/bin/activate
+source ~/autodrive_ws/venv/bin/activate
 ```
 
 Install the dependencies declared in every `package.xml` file:
@@ -244,8 +225,6 @@ The exact dependency list is declared in:
 gap_follow/package.xml
 ```
 
----
-
 # 5. Build the ROS 2 Packages
 
 The Follow the Gap node is written in C++, so it is compiled using:
@@ -257,7 +236,7 @@ CMakeLists.txt
 Clean only the package if it was compiled previously with another structure:
 
 ```bash
-cd ~/autodrive_ws_slam
+cd ~/autodrive_ws
 
 rm -rf build/gap_follow
 rm -rf install/gap_follow
@@ -288,7 +267,7 @@ colcon build \
 Load the workspace:
 
 ```bash
-source ~/autodrive_ws_slam/install/setup.bash
+source ~/autodrive_ws/install/setup.bash
 ```
 
 Verify that ROS 2 can find the C++ executable:
@@ -306,12 +285,10 @@ gap_follow reactive_node
 The installed C++ executable should also exist at:
 
 ```bash
-file ~/autodrive_ws_slam/install/gap_follow/lib/gap_follow/reactive_node
+file ~/autodrive_ws/install/gap_follow/lib/gap_follow/reactive_node
 ```
 
 It should be reported as an ELF executable.
-
----
 
 # 6. ROS 2 System Overview
 
@@ -324,8 +301,8 @@ flowchart LR
     FTG -->|Float32 throttle command| BRIDGE
     FTG -->|Float32 steering command| BRIDGE
 
-    FTG -->|Processed LaserScan| RVIZ[RViz2]
-    FTG -->|Direction marker| RVIZ
+    FTG -->|Processed LaserScan| DEBUG[Diagnostic topics]
+    FTG -->|Direction marker| DEBUG
 ```
 
 Main components:
@@ -339,10 +316,6 @@ Main components:
 3. **Reactive Follow the Gap Node**  
    Processes the LiDAR scan and publishes throttle and steering commands.
 
-4. **RViz2**  
-   Displays the raw or processed scan and the selected steering direction.
-
----
 
 # 7. Topics Used by the Controller
 
@@ -380,7 +353,7 @@ Both commands use:
 std_msgs/msg/Float32
 ```
 
-## Visualization Publishers
+## Diagnostic Publishers
 
 Processed LiDAR scan:
 
@@ -394,51 +367,56 @@ Selected direction marker:
 /visualization_marker
 ```
 
----
-
 # 8. Project Execution
 
 ## 8.1 Start the AutoDRIVE Simulator
 
-Open the AutoDRIVE Simulator and load the F1TENTH environment used for the laboratory.
-
-Keep the simulator running before starting the ROS 2 controller.
-
-## 8.2 Terminal 1 — Start the AutoDRIVE Bridge and RViz
+Open a terminal in the directory that contains the simulator executable and run:
 
 ```bash
-cd ~/autodrive_ws_slam
+./"AutoDRIVE Simulator.x86_64"
+```
+
+Load the F1TENTH environment used for the laboratory and keep the simulator running before starting the ROS 2 controller.
+
+Inside the simulator:
+
+1. Activate the communication bridge.
+2. Wait until its status displays `Connected`.
+3. Set the vehicle control mode to `Autonomous`.
+
+## 8.2 Terminal 1 — Start the AutoDRIVE Bridge
+
+```bash
+cd ~/autodrive_ws
 
 source /opt/ros/humble/setup.bash
-source ~/autodrive_ws_slam/venv/bin/activate
-source ~/autodrive_ws_slam/install/setup.bash
+source ~/autodrive_ws/venv/bin/activate
+source ~/autodrive_ws/install/setup.bash
 
-ros2 launch autodrive_f1tenth simulator_bringup_rviz.launch.py
+ros2 launch autodrive_f1tenth simulator_bringup_headless.launch.py
 ```
 
 This launch file starts:
 
 - The incoming AutoDRIVE bridge.
 - The outgoing AutoDRIVE bridge.
-- RViz2 with the simulator configuration.
 
 ## 8.3 Terminal 2 — Start Follow the Gap
 
 Open a second terminal:
 
 ```bash
-cd ~/autodrive_ws_slam
+cd ~/autodrive_ws
 
 source /opt/ros/humble/setup.bash
-source ~/autodrive_ws_slam/venv/bin/activate
-source ~/autodrive_ws_slam/install/setup.bash
+source ~/autodrive_ws/venv/bin/activate
+source ~/autodrive_ws/install/setup.bash
 
 ros2 run gap_follow reactive_node
 ```
 
 The vehicle should begin reacting to the LiDAR measurements and moving toward the largest valid free-space region.
-
----
 
 # 9. Basic Follow the Gap Method
 
@@ -472,8 +450,6 @@ Assign throttle
 
 Because the procedure is repeated whenever a new scan arrives, the controller continuously adapts to the current environment.
 
----
-
 # 10. Code Walkthrough: `reactive_node.cpp`
 
 ## 10.1 ROS 2 and Message Headers
@@ -490,7 +466,7 @@ These headers provide:
 - `rclcpp`: ROS 2 C++ nodes, publishers, subscriptions, and execution.
 - `LaserScan`: angular LiDAR measurements.
 - `Float32`: throttle and steering command messages.
-- `Marker`: RViz visualization of the selected direction.
+- `Marker`: the diagnostic interface visualization of the selected direction.
 
 Standard C++ libraries are used for vectors, minimum/maximum operations, sorting utilities, and trigonometric functions.
 
@@ -509,8 +485,6 @@ Node("reactive_node")
 ```
 
 The constructor creates all publishers and the LiDAR subscription.
-
----
 
 ## 10.3 Control Publishers
 
@@ -540,12 +514,10 @@ marker_pub =
         "/visualization_marker", 10);
 ```
 
-These topics are not required to move the vehicle. They are included so students can inspect the algorithm in RViz.
+These topics are not required to move the vehicle. They expose intermediate results that can be inspected with ROS 2 tools or other visualization clients.
 
-- `/processed_scan` shows the filtered ranges and safety bubble.
-- `/visualization_marker` shows the steering direction as an arrow.
-
----
+- `/processed_scan` publishes the filtered ranges and safety bubble.
+- `/visualization_marker` publishes the selected steering direction as an arrow marker.
 
 ## 10.5 LiDAR Subscription
 
@@ -582,8 +554,6 @@ The original message is copied before processing.
 
 This allows the node to modify the local `ranges` vector without changing the received message.
 
----
-
 ## 11.2 Select the Frontal Field of View
 
 ```cpp
@@ -614,8 +584,6 @@ The indices are then constrained to the valid scan range.
 
 This stage prevents rear and lateral measurements from influencing the steering decision.
 
----
-
 ## 11.3 Preprocess the Scan
 
 ```cpp
@@ -645,8 +613,6 @@ In the processed array:
 >0  → measured free distance
 ```
 
----
-
 ## 11.4 Find the Closest Obstacle
 
 ```cpp
@@ -666,8 +632,6 @@ The result is:
 
 - `closest_index`: angular position of the nearest valid obstacle.
 - `min_dist`: distance to that obstacle.
-
----
 
 ## 11.5 Create the Safety Bubble
 
@@ -694,8 +658,6 @@ Closest obstacle
 The current bubble radius is expressed in **LiDAR indices**, not meters. Its real angular size depends on `angle_increment`.
 
 For this introductory laboratory, the fixed radius is sufficient. A more advanced implementation can calculate the bubble from vehicle width, obstacle distance, and LiDAR angular resolution.
-
----
 
 ## 11.6 Find the Largest Valid Gap
 
@@ -724,8 +686,6 @@ max_end
 These variables represent the beginning and end of the largest detected gap.
 
 The threshold does not mean that `1.2 m` is universally safe. It is only the baseline selected for this simulation laboratory and should be tuned for the vehicle, speed, and track.
-
----
 
 ## 11.7 Select the Steering Target
 
@@ -768,8 +728,6 @@ A competition-oriented controller may later include:
 - Vehicle-width-aware bubbles.
 - Curvature-based speed control.
 
----
-
 ## 11.8 Basic Throttle Control
 
 The controller uses two throttle levels:
@@ -791,8 +749,6 @@ This is a basic steering-to-speed relationship. It is easy to understand and tun
 
 > Test speed changes in simulation first. Increasing throttle without improving steering stability can produce oscillation or collisions.
 
----
-
 ## 11.9 Publish the Processed Scan
 
 ```cpp
@@ -811,18 +767,16 @@ The original metadata is preserved:
 
 Only the range vector is replaced with the processed values.
 
-In RViz, this helps students identify:
+This processed topic helps identify:
 
 - The retained frontal sector.
 - Invalidated measurements.
 - The safety bubble.
 - The remaining free-space gaps.
 
----
-
 ## 11.10 Publish the Direction Marker
 
-The node creates an RViz arrow:
+The node creates a visualization arrow marker:
 
 ```cpp
 marker.type =
@@ -838,7 +792,7 @@ marker.pose.orientation.w = std::cos(angle / 2.0);
 
 The marker is red and points toward the current target direction.
 
-This provides a direct visual comparison between:
+This marker provides a direct comparison between:
 
 ```text
 processed LiDAR gap
@@ -869,37 +823,7 @@ Execution sequence:
 4. Execute the LiDAR callback whenever a scan arrives.
 5. Shut down ROS 2 when the process is stopped.
 
----
-
-# 12. RViz Configuration
-
-Add a `LaserScan` display for:
-
-```text
-/processed_scan
-```
-
-Add a `Marker` display for:
-
-```text
-/visualization_marker
-```
-
-The RViz fixed frame must be compatible with:
-
-```text
-scan_msg->header.frame_id
-```
-
-Expected visualization:
-
-- LiDAR points only in the selected frontal field of view.
-- A zeroed region around the nearest obstacle.
-- A red arrow pointing toward the selected gap.
-
----
-
-# 13. Verification Commands
+# 12. Verification Commands
 
 List active nodes:
 
@@ -913,7 +837,6 @@ Expected nodes include:
 /autodrive_incoming_bridge
 /autodrive_outgoing_bridge
 /reactive_node
-/rviz2
 ```
 
 Check LiDAR publication frequency:
@@ -948,9 +871,7 @@ Verify the marker:
 ros2 topic info /visualization_marker
 ```
 
----
-
-# 14. Basic Tuning Guide
+# 13. Basic Tuning Guide
 
 The main values students can modify are:
 
@@ -975,16 +896,14 @@ Recommended tuning order:
 
 Change one parameter at a time and record the resulting behavior.
 
----
-
-# 15. Common Problems
+# 14. Common Problems
 
 ## `ModuleNotFoundError: No module named 'gevent'`
 
 Activate the project environment and install the package there:
 
 ```bash
-cd ~/autodrive_ws_slam
+cd ~/autodrive_ws
 source venv/bin/activate
 
 python -m pip install gevent
@@ -996,14 +915,12 @@ Verify:
 python -c "from gevent import pywsgi; print('gevent OK')"
 ```
 
----
-
 ## `ModuleNotFoundError: No module named 'colcon_core'`
 
 Repair `colcon` inside the virtual environment:
 
 ```bash
-source ~/autodrive_ws_slam/venv/bin/activate
+source ~/autodrive_ws/venv/bin/activate
 
 python -m pip install \
   --upgrade \
@@ -1018,14 +935,12 @@ Verify:
 python -c "import colcon_core; print('colcon_core OK')"
 ```
 
----
-
 ## `Package 'gap_follow' not found`
 
 Rebuild and source the workspace:
 
 ```bash
-cd ~/autodrive_ws_slam
+cd ~/autodrive_ws
 
 source /opt/ros/humble/setup.bash
 source venv/bin/activate
@@ -1036,8 +951,6 @@ colcon build \
 
 source install/setup.bash
 ```
-
----
 
 ## `No executable found`
 
@@ -1067,17 +980,18 @@ colcon build \
 source install/setup.bash
 ```
 
----
-
 ## The bridge starts, but the vehicle does not move
 
 Check that:
 
 1. The AutoDRIVE Simulator is running.
-2. The incoming and outgoing bridges are active.
-3. The LiDAR topic is publishing.
-4. The controller is publishing throttle and steering.
-5. The topic names match the F1TENTH vehicle instance.
+2. The communication bridge is activated inside the simulator.
+3. The simulator bridge status displays `Connected`.
+4. The F1TENTH vehicle is set to `Autonomous` mode.
+5. The incoming and outgoing ROS 2 bridge nodes are active.
+6. The LiDAR topic is publishing.
+7. The controller is publishing throttle and steering.
+8. The topic names match the F1TENTH vehicle instance.
 
 Useful commands:
 
@@ -1091,9 +1005,7 @@ ros2 topic echo \
   /autodrive/f1tenth_1/throttle_command
 ```
 
----
-
-# 16. Laboratory Discussion
+# 15. Laboratory Discussion
 
 Students should be able to answer:
 
@@ -1104,9 +1016,7 @@ Students should be able to answer:
 5. Why is throttle reduced during turns?
 6. Which limitations would become important at competition speed?
 
----
-
-# 17. Conclusion
+# 16. Conclusion
 
 This laboratory demonstrates the minimum functional structure of a Follow the Gap controller:
 
