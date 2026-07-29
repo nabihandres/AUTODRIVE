@@ -74,30 +74,21 @@ rosdep update
 
 If `rosdep` reports that it was already initialized, continue with the next step.
 
-# 2. Workspace and Python Virtual Environment
+# 2. Activate the Existing Workspace and Virtual Environment
 
-This tutorial uses the workspace:
+This tutorial continues the previous AutoDRIVE laboratories. Therefore, the following workspace and virtual environment are assumed to already exist:
 
 ```text
 ~/autodrive_ws
+~/autodrive_ws/venv
 ```
 
-Create it if necessary:
+Load ROS 2 and activate the existing project environment:
 
 ```bash
-mkdir -p ~/autodrive_ws/src
 cd ~/autodrive_ws
-```
 
-Create a virtual environment that can also access the ROS 2 Python packages installed in the system:
-
-```bash
-python3 -m venv venv --system-site-packages
-```
-
-Activate it:
-
-```bash
+source /opt/ros/humble/setup.bash
 source ~/autodrive_ws/venv/bin/activate
 ```
 
@@ -107,7 +98,7 @@ Prevent `colcon` from scanning the internal folders of the virtual environment:
 touch ~/autodrive_ws/venv/COLCON_IGNORE
 ```
 
-Install the project-specific Python tools inside the virtual environment:
+Install or update the Python tools required by the bridge and the workspace:
 
 ```bash
 python -m pip install --upgrade pip setuptools wheel
@@ -117,7 +108,7 @@ python -m pip install \
   gevent
 ```
 
-Verify the environment:
+Verify the active environment:
 
 ```bash
 which python
@@ -134,17 +125,19 @@ Expected paths:
 /home/<user>/autodrive_ws/venv/bin/colcon
 ```
 
-> The virtual environment isolates the Python dependencies used by this project. The C++ compiler and the ROS 2 libraries continue to come from the Ubuntu and ROS 2 Humble installations.
+> The virtual environment isolates the Python dependencies used by this project. The C++ compiler and the ROS 2 Humble libraries continue to come from the system installation.
 
-# 3. Download Only the Follow the Gap Folder
+# 3. Download Only the Follow the Gap Project
 
-The course repository contains several tutorials and projects. For this laboratory, only the following directory is required:
+The course repository contains tutorials and additional projects, but this laboratory only requires:
 
 ```text
 f1tenth-gap-follow-autodrive/
 ```
 
-Use a **sparse checkout** so Git checks out only that project folder instead of the complete repository.
+Git does not provide a normal `git clone` command for a single subdirectory. The following procedure uses a temporary **non-cone sparse checkout**, extracts only the required folder, and then removes the temporary repository.
+
+> Run this procedure only if `~/autodrive_ws/src/f1tenth-gap-follow-autodrive` does not already exist.
 
 ```bash
 cd ~/autodrive_ws/src
@@ -152,25 +145,39 @@ cd ~/autodrive_ws/src
 git clone \
   --depth 1 \
   --filter=blob:none \
-  --sparse \
+  --no-checkout \
   https://github.com/nabihandres/AUTODRIVE.git \
-  autodrive_course
+  .autodrive_sparse
 
-cd autodrive_course
+cd .autodrive_sparse
 
-git sparse-checkout set f1tenth-gap-follow-autodrive
+git sparse-checkout init --no-cone
+git sparse-checkout set '/f1tenth-gap-follow-autodrive/**'
+git checkout main
+
+cd ~/autodrive_ws/src
+
+mv \
+  .autodrive_sparse/f1tenth-gap-follow-autodrive \
+  ./f1tenth-gap-follow-autodrive
+
+rm -rf .autodrive_sparse
 ```
 
-Verify the downloaded content:
+Only the required project should remain inside the workspace source directory:
 
 ```bash
-find f1tenth-gap-follow-autodrive -maxdepth 3 -type f | sort
+find \
+  ~/autodrive_ws/src/f1tenth-gap-follow-autodrive \
+  -maxdepth 3 \
+  -type f \
+  | sort
 ```
 
-The ROS 2 package should be located at:
+Expected structure:
 
 ```text
-~/autodrive_ws/src/autodrive_course/
+~/autodrive_ws/src/
 └── f1tenth-gap-follow-autodrive/
     └── gap_follow/
         ├── CMakeLists.txt
@@ -179,13 +186,7 @@ The ROS 2 package should be located at:
             └── reactive_node.cpp
 ```
 
-Git still creates the repository metadata in:
-
-```text
-~/autodrive_ws/src/autodrive_course/.git
-```
-
-However, the working tree contains only the selected course project and the repository-level metadata required by Git.
+The root-level Markdown tutorials and the other repository folders are not copied into the workspace.
 
 # 4. Install ROS 2 Dependencies
 
