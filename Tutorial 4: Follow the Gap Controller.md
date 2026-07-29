@@ -188,6 +188,8 @@ Expected structure:
 
 The root-level Markdown tutorials and the other repository folders are not copied into the workspace.
 
+https://github.com/user-attachments/assets/3c75ff3b-b1c9-44ef-b199-9ab45c12937d
+
 # 4. Install ROS 2 Dependencies
 
 Return to the workspace root:
@@ -290,6 +292,8 @@ file ~/autodrive_ws/install/gap_follow/lib/gap_follow/reactive_node
 ```
 
 It should be reported as an ELF executable.
+
+https://github.com/user-attachments/assets/3a91f300-3dce-4cb5-96a2-df3e4c50b28b
 
 # 6. ROS 2 System Overview
 
@@ -418,6 +422,8 @@ ros2 run gap_follow reactive_node
 ```
 
 The vehicle should begin reacting to the LiDAR measurements and moving toward the largest valid free-space region.
+
+https://github.com/user-attachments/assets/a04481bb-35de-40f7-a2c8-5bb5c07f9218
 
 # 9. Basic Follow the Gap Method
 
@@ -1006,18 +1012,7 @@ ros2 topic echo \
   /autodrive/f1tenth_1/throttle_command
 ```
 
-# 15. Laboratory Discussion
-
-Students should be able to answer:
-
-1. Why are measurements outside the frontal field of view removed?
-2. What problem does the safety bubble solve?
-3. Why is the largest gap not necessarily the same as the farthest LiDAR point?
-4. How is a LiDAR array index converted into a steering angle?
-5. Why is throttle reduced during turns?
-6. Which limitations would become important at competition speed?
-
-# 16. Conclusion
+# 15. Conclusion
 
 This laboratory demonstrates the minimum functional structure of a Follow the Gap controller:
 
@@ -1030,9 +1025,9 @@ The implementation is intentionally simple so each stage can be observed and mod
 Future improvements may include smoother steering, adaptive bubbles, weighted target selection, continuous speed control, emergency braking, and competition-oriented tuning.
 
 ## 🎓 Author
-**Marcos Emmanuel Balón García**
-*Mechatronics Engineering Student*
-Escuela Superior Politécnica del Litoral (ESPOL)
-Guayaquil, Ecuador
+This project was developed as part of **AIROS – ESPOL**.
 
-Developed as part of the Mechatronics Engineering curriculum at ESPOL.
+**Maykoll Vanegas**
+GitHub: [https://github.com/VanegasMaykoll](https://github.com/VanegasMaykoll)
+
+AIROS – ESPOL
